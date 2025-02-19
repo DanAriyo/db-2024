@@ -88,11 +88,11 @@ public class User implements DataEntity {
         return this.cf;
     }
 
-    public final class DAO {
+    public final class UserDAO {
 
         private Connection connection;
 
-        public DAO(Connection connection) {
+        public UserDAO(Connection connection) {
 
             this.connection = connection;
         }
