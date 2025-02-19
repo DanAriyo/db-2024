@@ -92,11 +92,11 @@ public class Transaction implements DataEntity{
         return this.idTransazione;
     }
 
-    public final class DAO {
+    public final class TransactionDAO {
     
         private Connection connection;
 
-        public DAO(Connection connection){
+        public TransactionDAO(Connection connection){
             this.connection = connection;
         }
 
