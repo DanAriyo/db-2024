@@ -87,11 +87,11 @@ public class Product implements DataEntity {
         return this.prezzo;
     }
 
-    public final class DAO {
+    public final class ProductDAO {
 
         private Connection connection;
 
-        public DAO(Connection connection) {
+        public ProductDAO(Connection connection) {
             this.connection = connection;
         }
 
