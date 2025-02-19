@@ -92,7 +92,55 @@ public class Transaction implements DataEntity{
         return this.idTransazione;
     }
 
+    public final class DAO {
+    
+        private Connection connection;
 
+        public DAO(Connection connection){
+            this.connection = connection;
+        }
+
+        public List<Transaction> createTransactionList(ResultSet resultSet) throws SQLException {
+            List<Transaction> transactions = new ArrayList<>(); // La lista che conterrà i prodotti
+
+            // Iteriamo su ogni riga del ResultSet
+            while (resultSet.next()) {
+                // Recuperiamo i dati da ogni colonna del ResultSet
+                int idTransazione = resultSet.getInt("idTransazione"); 
+                int idVenditore = resultSet.getInt("idVenditore"); 
+                int idAcquirente = resultSet.getInt("idAcquirente"); // Supponiamo che "idCategoria" sia una colonna
+                int speseSpedizione = resultSet.getInt("speseSpedizione");
+                int idRecensione = resultSet.getInt("IdRecensione"); 
+                int idRecensitore = resultSet.getInt("IdRecensitore"); 
+                int idRecensito = resultSet.getInt("IdRecensito");
+                int idSaldo = resultSet.getInt("idSaldo"); 
+                int commissioni = resultSet.getInt("Commissioni");
+                Date data = resultSet.getDate("Data");
+                Time ora = resultSet.getTime("Ora"); 
+                int prezzo = resultSet.getInt("Prezzo");
+
+                Transaction transaction = new Transaction(idVenditore, idAcquirente, idTransazione,speseSpedizione, 
+                    commissioni,idSaldo,idRecensione,idRecensito, 
+                        idRecensitore,prezzo,data,ora);
+
+                // Aggiungiamo il product alla lista
+                transactions.add(transaction);
+            }
+
+            // Restituiamo la lista di products
+            return transactions;
+        }
+
+        public List<Transaction> getAll() throws DAOException {
+            String query = "SELECT * FROM Transazioni";
+            try (PreparedStatement statement = this.connection.prepareStatement(query)) {
+                ResultSet rs = statement.executeQuery();
+                return createTransactionList(rs);
+            } catch (Exception e) {
+                throw new DAOException("wrong query", e);
+            }
+        }
+    }
 
 
 }
