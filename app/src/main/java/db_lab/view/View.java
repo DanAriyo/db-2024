@@ -1,4 +1,4 @@
-package db_lab;
+package db_lab.view;
 
 import db_lab.data.dataentity.Product;
 import db_lab.data.dataentity.ProductPreview;

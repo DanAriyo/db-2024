@@ -1,4 +1,4 @@
-package db_lab;
+package db_lab.controller;
 
 import db_lab.data.DAOException;
 import db_lab.data.dataentity.ProductPreview;
