@@ -11,7 +11,7 @@ import java.util.List;
 
 import db_lab.data.DAOException;
 
-public class Transaction {
+public class Transaction implements DataEntity{
 
     private int idVenditore;
     private int idAcquirente;
@@ -51,10 +51,6 @@ public class Transaction {
         return this.idAcquirente;
     }
 
-    public int getIdTransazione() {
-        return this.idTransazione;
-    }
-
     public int getSpeseSpedizione() {
         return this.speseSpedizione;
     }
@@ -89,6 +85,11 @@ public class Transaction {
 
     public Time getOra() {
         return this.ora;
+    }
+
+    @Override
+    public int getId() {
+        return this.idTransazione;
     }
 
 
