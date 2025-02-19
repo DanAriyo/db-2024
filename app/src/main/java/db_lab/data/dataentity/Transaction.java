@@ -140,6 +140,17 @@ public class Transaction implements DataEntity{
                 throw new DAOException("wrong query", e);
             }
         }
+
+        public List<Transaction> filterbyID(int id) throws DAOException {
+            String query = "SELECT * FROM Transazioni WHERE idTransazioni = ?";
+            try (PreparedStatement statement = this.connection.prepareStatement(query)) {
+                statement.setInt(1, id);
+                ResultSet rs = statement.executeQuery();
+                return createTransactionList(rs);
+            } catch (Exception e) {
+                throw new DAOException("wrong query", e);
+            }
+        }
     }
 
 
