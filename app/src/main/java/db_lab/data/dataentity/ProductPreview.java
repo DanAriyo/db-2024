@@ -34,10 +34,10 @@ public class ProductPreview implements DataEntity {
         return this.taglia;
     }
 
-    public final class DAO {
+    public final class ProductPreviewDAO {
         private final Connection connection;
 
-        public DAO(Connection connection) {
+        public ProductPreviewDAO(Connection connection) {
             this.connection = connection;
         }
 
