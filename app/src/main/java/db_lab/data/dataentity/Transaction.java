@@ -11,7 +11,7 @@ import java.util.List;
 
 import db_lab.data.DAOException;
 
-public class Transaction implements DataEntity{
+public class Transaction implements DataEntity {
 
     private int idVenditore;
     private int idAcquirente;
@@ -26,9 +26,13 @@ public class Transaction implements DataEntity{
     private Date data;
     private Time ora;
 
-    public Transaction(int idVenditore, int idAcquirente, int idTransazione, int speseSpedizione, 
-                       int commissioni, int idSaldo, int idRecensione, int idRecensito, 
-                       int idRecensiore, int prezzo, Date data, Time ora) {
+    public Transaction() {
+
+    }
+
+    public Transaction(int idVenditore, int idAcquirente, int idTransazione, int speseSpedizione,
+            int commissioni, int idSaldo, int idRecensione, int idRecensito,
+            int idRecensiore, int prezzo, Date data, Time ora) {
         this.idVenditore = idVenditore;
         this.idAcquirente = idAcquirente;
         this.idTransazione = idTransazione;
@@ -93,10 +97,10 @@ public class Transaction implements DataEntity{
     }
 
     public final class TransactionDAO {
-    
+
         private Connection connection;
 
-        public TransactionDAO(Connection connection){
+        public TransactionDAO(Connection connection) {
             this.connection = connection;
         }
 
@@ -106,22 +110,22 @@ public class Transaction implements DataEntity{
             // Iteriamo su ogni riga del ResultSet
             while (resultSet.next()) {
                 // Recuperiamo i dati da ogni colonna del ResultSet
-                int idTransazione = resultSet.getInt("idTransazione"); 
-                int idVenditore = resultSet.getInt("idVenditore"); 
+                int idTransazione = resultSet.getInt("idTransazione");
+                int idVenditore = resultSet.getInt("idVenditore");
                 int idAcquirente = resultSet.getInt("idAcquirente"); // Supponiamo che "idCategoria" sia una colonna
                 int speseSpedizione = resultSet.getInt("speseSpedizione");
-                int idRecensione = resultSet.getInt("IdRecensione"); 
-                int idRecensitore = resultSet.getInt("IdRecensitore"); 
+                int idRecensione = resultSet.getInt("IdRecensione");
+                int idRecensitore = resultSet.getInt("IdRecensitore");
                 int idRecensito = resultSet.getInt("IdRecensito");
-                int idSaldo = resultSet.getInt("idSaldo"); 
+                int idSaldo = resultSet.getInt("idSaldo");
                 int commissioni = resultSet.getInt("Commissioni");
                 Date data = resultSet.getDate("Data");
-                Time ora = resultSet.getTime("Ora"); 
+                Time ora = resultSet.getTime("Ora");
                 int prezzo = resultSet.getInt("Prezzo");
 
-                Transaction transaction = new Transaction(idVenditore, idAcquirente, idTransazione,speseSpedizione, 
-                    commissioni,idSaldo,idRecensione,idRecensito, 
-                        idRecensitore,prezzo,data,ora);
+                Transaction transaction = new Transaction(idVenditore, idAcquirente, idTransazione, speseSpedizione,
+                        commissioni, idSaldo, idRecensione, idRecensito,
+                        idRecensitore, prezzo, data, ora);
 
                 // Aggiungiamo il product alla lista
                 transactions.add(transaction);
@@ -152,6 +156,5 @@ public class Transaction implements DataEntity{
             }
         }
     }
-
 
 }
