@@ -15,6 +15,10 @@ public class ProductPreview implements DataEntity {
     private int prezzo;
     private String taglia;
 
+    public ProductPreview() {
+
+    }
+
     public ProductPreview(int id, int prezzo, String taglia) {
         this.id = id;
         this.prezzo = prezzo;
