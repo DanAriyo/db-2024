@@ -1,11 +1,9 @@
 package db_lab.data.dataentity;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +34,14 @@ public class Deposit implements DataEntity {
 
     public int getImporto() {
         return this.importo;
+    }
+
+    public int getIban() {
+        return this.iban;
+    }
+
+    public int getIdSaldo() {
+        return this.idSaldo;
     }
 
     public final class DepositDAO {
