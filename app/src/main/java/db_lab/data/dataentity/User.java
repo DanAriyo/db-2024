@@ -23,6 +23,10 @@ public class User implements DataEntity {
     private int idSaldo;
     private Date data;
 
+    public User() {
+
+    }
+
     public User(int id, String nome, String cognome, String email,
             String iban, int idSaldo, String telefono, String indirizzo, Date data, String cf) {
 
@@ -129,7 +133,7 @@ public class User implements DataEntity {
         }
 
         public void create(User user) throws DAOException {
-            
+
             String query = "INSERT INTO Utenti (id, nome,cognome, email, iban, idSaldo, telefono, indirizzo, data, cf) VALUES (?,?,?,?,?,?,?,?,?,?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, user.getId());
