@@ -19,7 +19,7 @@ public class User implements DataEntity {
     private String telefono;
     private String indirizzo;
     private String cf;
-    private String iban;
+    private int iban;
     private int idSaldo;
     private Date data;
 
@@ -28,7 +28,7 @@ public class User implements DataEntity {
     }
 
     public User(int id, String nome, String cognome, String email,
-            String iban, int idSaldo, String telefono, String indirizzo, Date data, String cf) {
+            int iban, int idSaldo, String telefono, String indirizzo, Date data, String cf) {
 
         this.id = id;
         this.nome = nome;
@@ -63,7 +63,7 @@ public class User implements DataEntity {
     }
 
     // Getter per iban
-    public String getIban() {
+    public int getIban() {
         return this.iban;
     }
 
@@ -140,7 +140,7 @@ public class User implements DataEntity {
                 statement.setString(2, user.getNome());
                 statement.setString(3, user.getCognome());
                 statement.setString(4, user.getEmail());
-                statement.setString(5, user.getIban());
+                statement.setInt(5, user.getIban());
                 statement.setInt(6, user.getIdSaldo());
                 statement.setString(7, user.getTelefono());
                 statement.setString(8, user.getIndirizzo());
@@ -164,7 +164,7 @@ public class User implements DataEntity {
                 String email = resultSet.getString("email"); // Supponiamo che "email" sia una colonna
                 String indirizzo = resultSet.getString("indirizzo");
                 int idSaldo = resultSet.getInt("idSaldo");
-                String iban = resultSet.getString("iban");
+                int iban = resultSet.getInt("iban");
                 String telefono = resultSet.getString("telefono");
                 Date data = resultSet.getDate("DataNascita");
                 String cf = resultSet.getString("CF");
