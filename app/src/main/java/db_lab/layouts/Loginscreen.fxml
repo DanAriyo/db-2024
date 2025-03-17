@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
@@ -8,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" type="Pane" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="db_lab.view.LoginScreen">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="531.0" prefWidth="755.0" type="Pane" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="db_lab.view.LoginView">
    <children>
       <Label alignment="CENTER" layoutX="63.0" layoutY="4.0" prefHeight="61.0" prefWidth="474.0" text="MY VINTED APP">
          <font>
@@ -25,7 +26,7 @@
             <Font size="25.0" />
          </font>
       </Label>
-      <VBox layoutX="14.0" layoutY="200.0" prefHeight="53.0" prefWidth="248.0">
+      <VBox layoutX="14.0" layoutY="130.0" prefHeight="53.0" prefWidth="248.0">
          <children>
             <HBox prefHeight="24.0" prefWidth="180.0">
                <children>
@@ -41,7 +42,7 @@
             </HBox>
          </children>
       </VBox>
-      <VBox layoutX="327.0" layoutY="200.0" prefHeight="53.0" prefWidth="248.0">
+      <VBox layoutX="353.0" layoutY="147.0" prefHeight="228.0" prefWidth="241.0">
          <children>
             <HBox prefHeight="24.0" prefWidth="180.0">
                <children>
@@ -55,7 +56,49 @@
                   <TextField />
                </children>
             </HBox>
+            <HBox prefHeight="29.0" prefWidth="248.0">
+               <children>
+                  <Label prefHeight="26.0" prefWidth="118.0" text="NOME" />
+                  <TextField prefHeight="26.0" prefWidth="126.0" />
+               </children>
+            </HBox>
+            <HBox prefHeight="29.0" prefWidth="248.0">
+               <children>
+                  <Label prefHeight="26.0" prefWidth="117.0" text="COGNOME" />
+                  <TextField prefHeight="26.0" prefWidth="126.0" />
+               </children>
+            </HBox>
+            <HBox prefHeight="29.0" prefWidth="248.0">
+               <children>
+                  <Label prefHeight="26.0" prefWidth="114.0" text="E-MAIL" />
+                  <TextField prefHeight="26.0" prefWidth="126.0" />
+               </children>
+            </HBox>
+            <HBox prefHeight="29.0" prefWidth="248.0">
+               <children>
+                  <Label prefHeight="26.0" prefWidth="114.0" text="TELEFONO" />
+                  <TextField prefHeight="26.0" prefWidth="126.0" />
+               </children>
+            </HBox>
+            <HBox prefHeight="29.0" prefWidth="248.0">
+               <children>
+                  <Label prefHeight="26.0" prefWidth="117.0" text="INDIRIZZO" />
+                  <TextField prefHeight="26.0" prefWidth="126.0" />
+               </children>
+            </HBox>
+            <HBox prefHeight="29.0" prefWidth="248.0">
+               <children>
+                  <Label prefHeight="26.0" prefWidth="117.0" text="CODICE FISCALE" />
+                  <TextField prefHeight="26.0" prefWidth="126.0" />
+               </children>
+            </HBox>
          </children>
       </VBox>
+      <HBox layoutX="10.0" layoutY="10.0" prefHeight="29.0" prefWidth="248.0" />
+      <Button layoutX="328.0" layoutY="462.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="68.0" text="INVIO">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
    </children>
 </fx:root>
