@@ -13,7 +13,6 @@ public class BankAccount implements DataEntity {
 
     private int iban;
     private int saldo;
-    private int bankAccountCounter = 1000;
 
     public BankAccount() {
 
@@ -31,10 +30,6 @@ public class BankAccount implements DataEntity {
 
     public int getSaldo() {
         return this.saldo;
-    }
-
-    public void increaseCounter() {
-        this.bankAccountCounter++;
     }
 
     public final class BankAccountDAO {
@@ -80,6 +75,17 @@ public class BankAccount implements DataEntity {
                 return createBankAccountList(rs);
             } catch (Exception e) {
                 throw new DAOException("wrong query", e);
+            }
+        }
+
+        public void create(BankAccount bankAccount) throws DAOException {
+            String query = "INSERT INTO Conti Corrente (iban,ammontare) VALUES (?,?)";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, bankAccount.getId());
+                statement.setInt(2, bankAccount.getSaldo());
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                throw new DAOException("Error creating user", e);
             }
         }
     }

@@ -13,7 +13,6 @@ public class Balance implements DataEntity {
 
     private int idSaldo;
     private int ammontare;
-    private int BalanceCounter = 100;
 
     public Balance() {
 
@@ -32,10 +31,6 @@ public class Balance implements DataEntity {
 
     public int getAmmontare() {
         return this.ammontare;
-    }
-
-    public void increaseCounter() {
-        this.BalanceCounter++;
     }
 
     public final class BalanceDAO {
@@ -82,6 +77,17 @@ public class Balance implements DataEntity {
                 return createBalanceList(rs);
             } catch (Exception e) {
                 throw new DAOException("wrong query", e);
+            }
+        }
+
+        public void create(Balance balance) throws DAOException {
+            String query = "INSERT INTO Saldi (idSaldo,ammontare) VALUES (?,?)";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, balance.getId());
+                statement.setInt(2, balance.getAmmontare());
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                throw new DAOException("Error creating user", e);
             }
         }
 
