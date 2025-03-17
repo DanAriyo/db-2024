@@ -34,6 +34,10 @@ public class Balance implements DataEntity {
         return this.ammontare;
     }
 
+    public void increaseCounter() {
+        this.BalanceCounter++;
+    }
+
     public final class BalanceDAO {
 
         private Connection connection;

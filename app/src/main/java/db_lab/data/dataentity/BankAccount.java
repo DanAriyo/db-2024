@@ -33,6 +33,10 @@ public class BankAccount implements DataEntity {
         return this.saldo;
     }
 
+    public void increaseCounter() {
+        this.bankAccountCounter++;
+    }
+
     public final class BankAccountDAO {
         private Connection connection;
 
