@@ -94,8 +94,7 @@
             </HBox>
          </children>
       </VBox>
-      <HBox layoutX="10.0" layoutY="10.0" prefHeight="29.0" prefWidth="248.0" />
-      <Button layoutX="328.0" layoutY="462.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="68.0" text="INVIO">
+      <Button fx:id="LoginButton" layoutX="328.0" layoutY="462.0" mnemonicParsing="false" onAction="#handleLoginButton" prefHeight="25.0" prefWidth="68.0" text="INVIO">
          <font>
             <Font size="14.0" />
          </font>
