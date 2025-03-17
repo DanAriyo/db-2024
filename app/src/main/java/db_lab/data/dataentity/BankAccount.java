@@ -14,6 +14,10 @@ public class BankAccount implements DataEntity {
     private int iban;
     private int saldo;
 
+    public BankAccount() {
+
+    }
+
     public BankAccount(int iban, int saldo) {
         this.iban = iban;
         this.saldo = saldo;

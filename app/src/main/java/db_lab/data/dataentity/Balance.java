@@ -14,6 +14,10 @@ public class Balance implements DataEntity {
     private int idSaldo;
     private int ammontare;
 
+    public Balance() {
+
+    }
+
     public Balance(int idSaldo, int ammontare) {
         this.idSaldo = idSaldo;
         this.ammontare = ammontare;
