@@ -14,6 +14,6 @@ import java.util.Objects;
 // that can happen in our app. This makes it simpler to track all the possible
 // actions that can take place as the application grows.
 //
-public final class Controller {
+public interface Controller {
 
 }
