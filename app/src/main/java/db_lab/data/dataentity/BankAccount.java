@@ -13,6 +13,7 @@ public class BankAccount implements DataEntity {
 
     private int iban;
     private int saldo;
+    private int bankAccountCounter = 1000;
 
     public BankAccount() {
 

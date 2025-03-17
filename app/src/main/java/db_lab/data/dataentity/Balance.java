@@ -13,6 +13,7 @@ public class Balance implements DataEntity {
 
     private int idSaldo;
     private int ammontare;
+    private int BalanceCounter = 100;
 
     public Balance() {
 
