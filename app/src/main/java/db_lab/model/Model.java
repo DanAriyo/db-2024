@@ -19,4 +19,6 @@ public interface Model {
 
     public boolean checkLogin(String username, String password);
 
+    public void addMoney(int idSaldo, int iban, int idUtente);
+
 }
