@@ -3,6 +3,7 @@ package db_lab.model;
 import db_lab.controller.Controller;
 import db_lab.data.dataentity.Balance;
 import db_lab.data.dataentity.BankAccount;
+import db_lab.data.dataentity.Deposit;
 import db_lab.data.dataentity.User;
 import db_lab.utilities.Pair;
 import db_lab.view.View;
@@ -38,6 +39,7 @@ public final class ModelImpl implements Model {
     private List<User> users;
     private List<Balance> balances;
     private List<BankAccount> bankAccounts;
+    private List<Deposit> deposits;
 
     public ModelImpl(Controller controller, View view, Connection connection) {
         this.controller = controller;
@@ -51,6 +53,7 @@ public final class ModelImpl implements Model {
         this.users = new ArrayList<>();
         this.balances = new ArrayList<>();
         this.bankAccounts = new ArrayList<>();
+        this.deposits = new ArrayList<>();
 
     }
 
@@ -88,6 +91,16 @@ public final class ModelImpl implements Model {
     @Override
     public List<User> getUsers() {
         return this.daoHelper.getAll();
+    }
+
+    @Override
+    public void addMoney(int idSaldo, int iban, int idUtente) {
+        // crea una nuova entita versamento e poi decidi se fare tutto su model e
+        // aggiornare db o se fare operazione tramite db e aggiornare model
+    }
+
+    private boolean checkIdUtente(int idUtente) {
+        return this.users.stream().filter(u -> u.getId() == idUtente).count() == 1;
     }
 
 }

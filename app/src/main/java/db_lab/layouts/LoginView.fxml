@@ -8,35 +8,40 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="531.0" prefWidth="755.0" type="Pane" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="db_lab.view.LoginView">
    <children>
-      <Label alignment="CENTER" layoutX="63.0" layoutY="4.0" prefHeight="61.0" prefWidth="474.0" text="MY VINTED APP">
+      <Label alignment="CENTER" layoutY="-2.0" prefHeight="67.0" prefWidth="755.0" text="MY VINTED APP">
          <font>
-            <Font size="26.0" />
+            <Font name="System Bold" size="26.0" />
          </font>
       </Label>
       <Label alignment="CENTER" layoutX="73.0" layoutY="94.0" prefHeight="24.0" prefWidth="84.0" text="LOGIN">
          <font>
-            <Font size="25.0" />
+            <Font name="System Bold" size="25.0" />
          </font>
       </Label>
       <Label layoutX="345.0" layoutY="94.0" text="REGISTRAZIONE">
          <font>
-            <Font size="25.0" />
+            <Font name="System Bold" size="25.0" />
          </font>
       </Label>
       <VBox layoutX="14.0" layoutY="130.0" prefHeight="53.0" prefWidth="248.0">
          <children>
             <HBox prefHeight="24.0" prefWidth="180.0">
                <children>
-                  <Label prefHeight="26.0" prefWidth="123.0" text="USERNAME" />
+                  <Label prefHeight="26.0" prefWidth="123.0" text="USERNAME">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
                   <TextField alignment="CENTER" prefHeight="26.0" prefWidth="138.0" />
                </children>
             </HBox>
             <HBox prefHeight="26.0" prefWidth="248.0">
                <children>
-                  <Label prefHeight="26.0" prefWidth="136.0" text="PASSWORD" />
+                  <Label prefHeight="26.0" prefWidth="136.0" text="PASSWORD">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
                   <TextField />
                </children>
             </HBox>
@@ -46,49 +51,73 @@
          <children>
             <HBox prefHeight="24.0" prefWidth="180.0">
                <children>
-                  <Label prefHeight="26.0" prefWidth="123.0" text="USERNAME" />
+                  <Label prefHeight="26.0" prefWidth="123.0" text="USERNAME">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
                   <TextField alignment="CENTER" prefHeight="26.0" prefWidth="138.0" />
                </children>
             </HBox>
             <HBox prefHeight="26.0" prefWidth="248.0">
                <children>
-                  <Label prefHeight="26.0" prefWidth="136.0" text="PASSWORD" />
+                  <Label prefHeight="26.0" prefWidth="136.0" text="PASSWORD">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
                   <TextField />
                </children>
             </HBox>
             <HBox prefHeight="29.0" prefWidth="248.0">
                <children>
-                  <Label prefHeight="26.0" prefWidth="118.0" text="NOME" />
+                  <Label prefHeight="26.0" prefWidth="118.0" text="NOME">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
                   <TextField prefHeight="26.0" prefWidth="126.0" />
                </children>
             </HBox>
             <HBox prefHeight="29.0" prefWidth="248.0">
                <children>
-                  <Label prefHeight="26.0" prefWidth="117.0" text="COGNOME" />
+                  <Label prefHeight="26.0" prefWidth="117.0" text="COGNOME">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
                   <TextField prefHeight="26.0" prefWidth="126.0" />
                </children>
             </HBox>
             <HBox prefHeight="29.0" prefWidth="248.0">
                <children>
-                  <Label prefHeight="26.0" prefWidth="114.0" text="E-MAIL" />
+                  <Label prefHeight="26.0" prefWidth="114.0" text="E-MAIL">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
                   <TextField prefHeight="26.0" prefWidth="126.0" />
                </children>
             </HBox>
             <HBox prefHeight="29.0" prefWidth="248.0">
                <children>
-                  <Label prefHeight="26.0" prefWidth="114.0" text="TELEFONO" />
+                  <Label prefHeight="26.0" prefWidth="114.0" text="TELEFONO">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
                   <TextField prefHeight="26.0" prefWidth="126.0" />
                </children>
             </HBox>
             <HBox prefHeight="29.0" prefWidth="248.0">
                <children>
-                  <Label prefHeight="26.0" prefWidth="117.0" text="INDIRIZZO" />
+                  <Label prefHeight="26.0" prefWidth="117.0" text="INDIRIZZO">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
                   <TextField prefHeight="26.0" prefWidth="126.0" />
                </children>
             </HBox>
             <HBox prefHeight="29.0" prefWidth="248.0">
                <children>
-                  <Label prefHeight="26.0" prefWidth="117.0" text="CODICE FISCALE" />
+                  <Label prefHeight="26.0" prefWidth="117.0" text="CODICE FISCALE">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
                   <TextField prefHeight="26.0" prefWidth="126.0" />
                </children>
             </HBox>
@@ -96,7 +125,7 @@
       </VBox>
       <Button fx:id="LoginButton" layoutX="328.0" layoutY="462.0" mnemonicParsing="false" onAction="#handleLoginButton" prefHeight="25.0" prefWidth="68.0" text="INVIO">
          <font>
-            <Font size="14.0" />
+            <Font name="System Bold" size="14.0" />
          </font>
       </Button>
    </children>
