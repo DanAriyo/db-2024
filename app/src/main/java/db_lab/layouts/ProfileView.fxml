@@ -27,7 +27,7 @@
       </HBox>
    </bottom>
    <top>
-      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="46.0" prefWidth="794.0" text="HOME PAGE" BorderPane.alignment="CENTER">
+      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="46.0" prefWidth="794.0" text="PROFILE PAGE" BorderPane.alignment="CENTER">
          <font>
             <Font name="System Bold" size="30.0" />
          </font></Label>
