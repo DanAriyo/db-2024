@@ -58,7 +58,7 @@ public class BankAccount implements DataEntity {
         }
 
         public List<BankAccount> getAll() throws DAOException {
-            String query = "SELECT * FROM Conti Corrente";
+            String query = "SELECT * FROM ContiCorrente";
             try (PreparedStatement statement = this.connection.prepareStatement(query)) {
                 ResultSet rs = statement.executeQuery();
                 return createBankAccountList(rs);
@@ -68,7 +68,7 @@ public class BankAccount implements DataEntity {
         }
 
         public List<BankAccount> filterbyID(int id) throws DAOException {
-            String query = "SELECT * FROM COnti Corrente WHERE iban = ?";
+            String query = "SELECT * FROM ContiCorrente WHERE iban = ?";
             try (PreparedStatement statement = this.connection.prepareStatement(query)) {
                 statement.setInt(1, id);
                 ResultSet rs = statement.executeQuery();
@@ -79,10 +79,9 @@ public class BankAccount implements DataEntity {
         }
 
         public void create(BankAccount bankAccount) throws DAOException {
-            String query = "INSERT INTO Conti Corrente (iban,ammontare) VALUES (?,?)";
+            String query = "INSERT INTO Conti Corrente (SaldoContoCorrente) VALUES (?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setInt(1, bankAccount.getId());
-                statement.setInt(2, bankAccount.getSaldo());
+                statement.setInt(1, bankAccount.getSaldo());
                 statement.executeUpdate();
             } catch (SQLException e) {
                 throw new DAOException("Error creating user", e);

@@ -13,38 +13,31 @@ import db_lab.data.DAOException;
 
 public class Transaction implements DataEntity {
 
+    private int idTransazione;
     private int idVenditore;
     private int idAcquirente;
-    private int idTransazione;
     private int speseSpedizione;
     private int commissioni;
-    private int idSaldo;
+    private int idSaldoVenditore;
     private int idRecensione;
-    private int idRecensito;
-    private int idRecensiore;
-    private int prezzo;
-    private Date data;
-    private Time ora;
+    private int idArticolo;
+    private int idSaldoAcquirente;
 
     public Transaction() {
 
     }
 
     public Transaction(int idVenditore, int idAcquirente, int idTransazione, int speseSpedizione,
-            int commissioni, int idSaldo, int idRecensione, int idRecensito,
-            int idRecensiore, int prezzo, Date data, Time ora) {
+            int commissioni, int idSaldoVenditore, int idRecensione, int idArticolo, int idSaldoAcquirente) {
         this.idVenditore = idVenditore;
         this.idAcquirente = idAcquirente;
-        this.idTransazione = idTransazione;
         this.speseSpedizione = speseSpedizione;
         this.commissioni = commissioni;
-        this.idSaldo = idSaldo;
+        this.idSaldoVenditore = idSaldoVenditore;
         this.idRecensione = idRecensione;
-        this.idRecensito = idRecensito;
-        this.idRecensiore = idRecensiore;
-        this.prezzo = prezzo;
-        this.data = data;
-        this.ora = ora;
+        this.idArticolo = idArticolo;
+        this.idSaldoAcquirente = idSaldoAcquirente;
+        this.idTransazione = idTransazione;
     }
 
     public int getIdVenditore() {
@@ -63,32 +56,20 @@ public class Transaction implements DataEntity {
         return this.commissioni;
     }
 
-    public int getIdSaldo() {
-        return this.idSaldo;
+    public int getIdSaldoVenditore() {
+        return this.idSaldoVenditore;
     }
 
     public int getIdRecensione() {
         return this.idRecensione;
     }
 
-    public int getIdRecensito() {
-        return this.idRecensito;
+    public int getIdArticolo() {
+        return this.idArticolo;
     }
 
-    public int getIdRecensiore() {
-        return this.idRecensiore;
-    }
-
-    public int getPrezzo() {
-        return this.prezzo;
-    }
-
-    public Date getData() {
-        return this.data;
-    }
-
-    public Time getOra() {
-        return this.ora;
+    public int getIdSaldoAcquirente() {
+        return this.idSaldoAcquirente;
     }
 
     @Override
@@ -115,17 +96,14 @@ public class Transaction implements DataEntity {
                 int idAcquirente = resultSet.getInt("idAcquirente"); // Supponiamo che "idCategoria" sia una colonna
                 int speseSpedizione = resultSet.getInt("speseSpedizione");
                 int idRecensione = resultSet.getInt("IdRecensione");
-                int idRecensitore = resultSet.getInt("IdRecensitore");
-                int idRecensito = resultSet.getInt("IdRecensito");
-                int idSaldo = resultSet.getInt("idSaldo");
+                int idArticolo = resultSet.getInt("IdArticolo");
+                int idSaldoVenditore = resultSet.getInt("idSaldoVenditore");
                 int commissioni = resultSet.getInt("Commissioni");
-                Date data = resultSet.getDate("Data");
-                Time ora = resultSet.getTime("Ora");
-                int prezzo = resultSet.getInt("Prezzo");
+                int idSaldoAcquirente = resultSet.getInt("Prezzo");
 
                 Transaction transaction = new Transaction(idVenditore, idAcquirente, idTransazione, speseSpedizione,
-                        commissioni, idSaldo, idRecensione, idRecensito,
-                        idRecensitore, prezzo, data, ora);
+                        commissioni, idSaldoVenditore, idRecensione, idArticolo,
+                        idSaldoAcquirente);
 
                 // Aggiungiamo il product alla lista
                 transactions.add(transaction);
@@ -146,7 +124,7 @@ public class Transaction implements DataEntity {
         }
 
         public List<Transaction> filterbyID(int id) throws DAOException {
-            String query = "SELECT * FROM Transazioni WHERE idTransazioni = ?";
+            String query = "SELECT * FROM Transazioni WHERE idTransazione = ?";
             try (PreparedStatement statement = this.connection.prepareStatement(query)) {
                 statement.setInt(1, id);
                 ResultSet rs = statement.executeQuery();
@@ -154,6 +132,30 @@ public class Transaction implements DataEntity {
             } catch (Exception e) {
                 throw new DAOException("wrong query", e);
             }
+        }
+
+        public void create(Transaction transaction) throws DAOException {
+
+            String query = "INSERT INTO Transazioni (idVenditore,idAcquirente,speseSpedizione,commissioni,idSaldoVenditore,idRecensione,idArticolo,idSaldoAcquirente)"
+                    + "VALUES (?,?,?,?,?,?,?,?,?,?)";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                // Impostiamo i parametri per il PreparedStatement
+                statement.setInt(1, transaction.getIdVenditore());
+                statement.setInt(2, transaction.getIdAcquirente());
+                statement.setInt(3, transaction.getIdSaldoAcquirente());
+                statement.setInt(4, transaction.getSpeseSpedizione());
+                statement.setInt(5, transaction.getCommissioni());
+                statement.setInt(6, transaction.getIdSaldoVenditore());
+                statement.setInt(7, transaction.getIdArticolo());
+                // MANCA RECENSIONE
+
+                // Eseguiamo l'operazione di aggiornamento
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                // Se si verifica un errore, lanciamo una DAOException
+                throw new DAOException("Error creating transaction", e);
+            }
+
         }
     }
 

@@ -93,6 +93,18 @@ public class Deposit implements DataEntity {
             }
         }
 
+        public void create(Deposit deposit) throws DAOException {
+            String query = "INSERT INTO Versamenti (importo,iban,idSaldo) VALUES (?,?,?)";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, deposit.getImporto());
+                statement.setInt(2, deposit.getIdSaldo());
+                statement.setInt(3, deposit.getIban());
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                throw new DAOException("Error creating discount", e);
+            }
+        }
+
     }
 
 }

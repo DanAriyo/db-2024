@@ -81,10 +81,9 @@ public class Balance implements DataEntity {
         }
 
         public void create(Balance balance) throws DAOException {
-            String query = "INSERT INTO Saldi (idSaldo,ammontare) VALUES (?,?)";
+            String query = "INSERT INTO Saldi (ammontare) VALUES (?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setInt(1, balance.getId());
-                statement.setInt(2, balance.getAmmontare());
+                statement.setInt(1, balance.getAmmontare());
                 statement.executeUpdate();
             } catch (SQLException e) {
                 throw new DAOException("Error creating user", e);

@@ -11,7 +11,7 @@ import db_lab.data.DAOException;
 
 public class ProductPreview implements DataEntity {
 
-    private int id;
+    private String nomeArticolo;
     private int prezzo;
     private String taglia;
 
@@ -19,15 +19,15 @@ public class ProductPreview implements DataEntity {
 
     }
 
-    public ProductPreview(int id, int prezzo, String taglia) {
-        this.id = id;
+    public ProductPreview(String nomeArticolo, int prezzo, String taglia) {
+        this.nomeArticolo = nomeArticolo;
         this.prezzo = prezzo;
         this.taglia = taglia;
     }
 
     @Override
     public int getId() {
-        return this.id;
+        return 1;
     }
 
     public int getPrezzo() {
@@ -36,6 +36,10 @@ public class ProductPreview implements DataEntity {
 
     public String getTaglia() {
         return this.taglia;
+    }
+
+    public String getNome() {
+        return this.nomeArticolo;
     }
 
     public final class ProductPreviewDAO {
@@ -69,15 +73,14 @@ public class ProductPreview implements DataEntity {
         public List<ProductPreview> createProductPreviewList(ResultSet resultSet) throws SQLException {
             List<ProductPreview> productPreviews = new ArrayList<>(); // La lista che conterrà i product previews
 
-            // Iteriamo su ogni riga del ResultSet
             while (resultSet.next()) {
                 // Creiamo un nuovo oggetto ProductPreview per ogni riga
-                int idArticolo = resultSet.getInt("idArticolo"); // Supponiamo che "idArticolo" sia una colonna
-                String taglia = resultSet.getString("taglia"); // Supponiamo che "taglia" sia una colonna
-                int prezzo = resultSet.getInt("prezzo"); // Supponiamo che "prezzo" sia una colonna
+                String nomeArticolo = resultSet.getString("nomeArticolo");
+                String taglia = resultSet.getString("taglia");
+                int prezzo = resultSet.getInt("prezzo");
 
                 // Crea l'oggetto ProductPreview
-                ProductPreview productPreview = new ProductPreview(idArticolo, prezzo, taglia);
+                ProductPreview productPreview = new ProductPreview(nomeArticolo, prezzo, taglia);
 
                 // Aggiungiamo il productPreview alla lista
                 productPreviews.add(productPreview);
