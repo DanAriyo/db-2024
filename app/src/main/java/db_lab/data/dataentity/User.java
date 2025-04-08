@@ -1,7 +1,6 @@
 package db_lab.data.dataentity;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,15 +20,16 @@ public class User implements DataEntity {
     private String cf;
     private int iban;
     private int idSaldo;
-    private Date data;
     private String username;
+    private String password;
 
     public User() {
 
     }
 
     public User(int id, String nome, String cognome, String email,
-            int iban, int idSaldo, String telefono, String indirizzo, Date data, String cf, String username) {
+            int iban, int idSaldo, String telefono, String indirizzo, String cf, String username,
+            String password) {
 
         this.id = id;
         this.nome = nome;
@@ -39,9 +39,9 @@ public class User implements DataEntity {
         this.idSaldo = idSaldo;
         this.telefono = telefono;
         this.indirizzo = indirizzo;
-        this.data = data;
         this.cf = cf;
         this.username = username;
+        this.password = password;
     }
 
     @Override
@@ -84,9 +84,12 @@ public class User implements DataEntity {
         return this.indirizzo;
     }
 
-    // Getter per data
-    public Date getData() {
-        return this.data;
+    public void setIban(int iban) {
+        this.iban = iban;
+    }
+
+    public void setIdSaldo(int idSaldo) {
+        this.idSaldo = idSaldo;
     }
 
     // Getter per cf
@@ -98,12 +101,26 @@ public class User implements DataEntity {
         return this.username;
     }
 
+    public String getPassword() {
+        return this.password;
+    }
+
     public final class UserDAO {
 
         private Connection connection;
 
-        public UserDAO(Connection connection) {
+        public UserDAO(Connection connection) throws DAOException, SQLException {
 
+            if (connection == null) {
+                throw new DAOException("Connection is null.");
+            }
+            try {
+                if (connection.isClosed()) {
+                    throw new DAOException("Connection is closed.");
+                }
+            } catch (SQLException e) {
+                throw new DAOException("Error checking connection status.", e);
+            }
             this.connection = connection;
         }
 
@@ -112,7 +129,7 @@ public class User implements DataEntity {
             try (PreparedStatement statement = this.connection.prepareStatement(query)) {
                 ResultSet rs = statement.executeQuery();
                 return createUserList(rs);
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 throw new DAOException("wrong query", e);
             }
         }
@@ -140,7 +157,7 @@ public class User implements DataEntity {
 
         public void create(User user) throws DAOException {
 
-            String query = "INSERT INTO Utenti (username,nome,cognome, email, iban, idSaldo, telefono, indirizzo, data, cf) VALUES (?,?,?,?,?,?,?,?,?,?)";
+            String query = "INSERT INTO Utenti (username,nome,cognome, email, iban, idSaldo, telefono, indirizzo,cf,password) VALUES (?,?,?,?,?,?,?,?,?,?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, user.getUsername());
                 statement.setString(2, user.getNome());
@@ -150,8 +167,8 @@ public class User implements DataEntity {
                 statement.setInt(6, user.getIdSaldo());
                 statement.setString(7, user.getTelefono());
                 statement.setString(8, user.getIndirizzo());
-                statement.setDate(9, user.getData());
-                statement.setString(10, user.getCf());
+                statement.setString(9, user.getCf());
+                statement.setString(10, user.getPassword());
                 statement.executeUpdate();
             } catch (SQLException e) {
                 throw new DAOException("Error creating user", e);
@@ -172,19 +189,41 @@ public class User implements DataEntity {
                 int idSaldo = resultSet.getInt("idSaldo");
                 int iban = resultSet.getInt("iban");
                 String telefono = resultSet.getString("telefono");
-                Date data = resultSet.getDate("DataNascita");
                 String cf = resultSet.getString("CF");
+                String password = resultSet.getString("password");
+                String username = resultSet.getString("username");
 
                 // Crea l'oggetto Utente
-                User utente = new User(id, nome, cognome, email, iban, idSaldo, telefono, indirizzo, data, cf,
-                        username);
+                User utente = new User(id, nome, cognome, email, iban, idSaldo, telefono, indirizzo, cf,
+                        username, password);
 
                 // Aggiungiamo l'utente alla lista
                 utenti.add(utente);
             }
 
+            if (utenti.isEmpty()) {
+                System.out.println("No users found.");
+            }
+
             // Restituiamo la lista di utenti
             return utenti;
+        }
+
+        public void toggleUserStatus(User user) throws DAOException {
+            String query = "UPDATE utenti " +
+                    "SET stato = CASE " +
+                    "WHEN stato = 'sbloccato' THEN 'bloccato' " +
+                    "WHEN stato = 'bloccato' THEN 'sbloccato' " +
+                    "ELSE stato " +
+                    "END " +
+                    "WHERE idUtente = ? AND stato != 'admin'";
+
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, user.getId());
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                throw new DAOException("Error toggling user status", e);
+            }
         }
 
     }

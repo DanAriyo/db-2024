@@ -68,8 +68,19 @@ public class Review implements DataEntity {
             }
         }
 
-        public List<Review> filterByReviewer(int idRecensione) throws DAOException {
+        public List<Review> filterByReview(int idRecensione) throws DAOException {
             String query = "SELECT * FROM Recensioni WHERE IdRecensione = ?";
+            try (PreparedStatement statement = this.connection.prepareStatement(query)) {
+                statement.setInt(1, idRecensitore);
+                ResultSet rs = statement.executeQuery();
+                return createReviewList(rs);
+            } catch (SQLException e) {
+                throw new DAOException("Error fetching reviews by reviewer", e);
+            }
+        }
+
+        public List<Review> filterByReviewer(int idUtente) throws DAOException {
+            String query = "SELECT * FROM Recensioni WHERE IdRecensito = ?";
             try (PreparedStatement statement = this.connection.prepareStatement(query)) {
                 statement.setInt(1, idRecensitore);
                 ResultSet rs = statement.executeQuery();

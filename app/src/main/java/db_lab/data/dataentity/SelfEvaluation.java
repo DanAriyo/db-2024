@@ -73,8 +73,8 @@ public class SelfEvaluation implements DataEntity {
             }
         }
 
-        public List<SelfEvaluation> filterByUserID(int idPremio) throws DAOException {
-            String query = "SELECT * FROM autovalutazione WHERE idPremio = ?";
+        public List<SelfEvaluation> filterByUserID(int id) throws DAOException {
+            String query = "SELECT * FROM autovalutazione WHERE idUtente = ?";
             try (PreparedStatement statement = this.connection.prepareStatement(query)) {
                 statement.setInt(1, idUtente);
                 ResultSet rs = statement.executeQuery();

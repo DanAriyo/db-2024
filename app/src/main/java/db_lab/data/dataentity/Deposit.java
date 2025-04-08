@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import db_lab.data.DAOException;
+import db_lab.data.dataentity.Balance.BalanceDAO;
+import db_lab.data.dataentity.BankAccount.BankAccountDAO;
 
 public class Deposit implements DataEntity {
 
@@ -53,22 +55,20 @@ public class Deposit implements DataEntity {
         }
 
         public List<Deposit> createDepositList(ResultSet resultSet) throws SQLException {
-            List<Deposit> deposits = new ArrayList<>(); // La lista che conterrà i prodotti
+            List<Deposit> deposits = new ArrayList<>();
 
-            // Iteriamo su ogni riga del ResultSet
             while (resultSet.next()) {
-                // Recuperiamo i dati da ogni colonna del ResultSet
+
                 int idVersamento = resultSet.getInt("idVersamento");
                 int idsaldo = resultSet.getInt("idSaldo");
                 int iban = resultSet.getInt("iban");
                 int importo = resultSet.getInt("importo");
 
                 Deposit deposit = new Deposit(idVersamento, importo, idsaldo, iban);
-                // Aggiungiamo il product alla lista
+
                 deposits.add(deposit);
             }
 
-            // Restituiamo la lista di products
             return deposits;
         }
 
@@ -77,8 +77,8 @@ public class Deposit implements DataEntity {
             try (PreparedStatement statement = this.connection.prepareStatement(query)) {
                 ResultSet rs = statement.executeQuery();
                 return createDepositList(rs);
-            } catch (Exception e) {
-                throw new DAOException("wrong query", e);
+            } catch (SQLException e) {
+                throw new DAOException("Error executing query to fetch all deposits", e);
             }
         }
 
@@ -89,7 +89,7 @@ public class Deposit implements DataEntity {
                 ResultSet rs = statement.executeQuery();
                 return createDepositList(rs);
             } catch (Exception e) {
-                throw new DAOException("wrong query", e);
+                throw new DAOException("Error executing query to fetch deposit by ID", e);
             }
         }
 
@@ -100,8 +100,15 @@ public class Deposit implements DataEntity {
                 statement.setInt(2, deposit.getIdSaldo());
                 statement.setInt(3, deposit.getIban());
                 statement.executeUpdate();
+                BankAccount bankAccount = new BankAccount();
+                BankAccountDAO bankAccountDAO = bankAccount.new BankAccountDAO(connection);
+                Balance balance = new Balance();
+                BalanceDAO balanceDAO = balance.new BalanceDAO(connection);
+                bankAccountDAO.updateById(deposit.getIban(), deposit.getImporto(), false);
+                balanceDAO.updateById(deposit.getIdSaldo(), deposit.getImporto(), true);
+
             } catch (SQLException e) {
-                throw new DAOException("Error creating discount", e);
+                throw new DAOException("Error creating deposit and updating balances", e);
             }
         }
 

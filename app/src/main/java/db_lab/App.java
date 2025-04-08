@@ -1,12 +1,30 @@
 package db_lab;
 
-import db_lab.data.DAOException;
-import db_lab.model.Model;
-import java.sql.SQLException;
+import javafx.stage.Stage;
+import db_lab.controller.Controller;
+import db_lab.controller.ControllerImpl;
+import db_lab.view.LoginView;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 
-public final class App {
+public class App extends Application {
 
-    public static void main(String[] args) throws SQLException {
-        
+    private Controller controller = new ControllerImpl();
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/LoginView.fxml"));
+        Parent root = loader.load();
+
+        LoginView controller = loader.getController();
+        controller.setController(this.controller);
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Login");
+        primaryStage.show();
     }
+
 }

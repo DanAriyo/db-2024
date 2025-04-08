@@ -38,24 +38,34 @@ public class Balance implements DataEntity {
         private Connection connection;
 
         public BalanceDAO(Connection connection) {
+            if (connection == null) {
+                throw new DAOException("Connection is null.");
+            }
+
+            try {
+                if (connection.isClosed()) {
+                    throw new DAOException("Connection is closed.");
+                }
+            } catch (SQLException e) {
+                throw new DAOException("Error checking connection status.", e);
+            }
+
             this.connection = connection;
         }
 
         public List<Balance> createBalanceList(ResultSet resultSet) throws SQLException {
-            List<Balance> balances = new ArrayList<>(); // La lista che conterrà i prodotti
+            List<Balance> balances = new ArrayList<>();
 
-            // Iteriamo su ogni riga del ResultSet
             while (resultSet.next()) {
-                // Recuperiamo i dati da ogni colonna del ResultSet
+
                 int idsaldo = resultSet.getInt("idSaldo");
                 int ammontare = resultSet.getInt("ammontare");
 
                 Balance balance = new Balance(idsaldo, ammontare);
-                // Aggiungiamo il product alla lista
+
                 balances.add(balance);
             }
 
-            // Restituiamo la lista di products
             return balances;
         }
 
@@ -65,18 +75,43 @@ public class Balance implements DataEntity {
                 ResultSet rs = statement.executeQuery();
                 return createBalanceList(rs);
             } catch (Exception e) {
-                throw new DAOException("wrong query", e);
+                throw new DAOException("Error fetching all balances", e);
             }
         }
 
         public List<Balance> filterbyID(int id) throws DAOException {
-            String query = "SELECT * FROM Saldi WHERE idVersamento = ?";
+            String query = "SELECT * FROM Saldi WHERE idSaldo = ?";
             try (PreparedStatement statement = this.connection.prepareStatement(query)) {
                 statement.setInt(1, id);
                 ResultSet rs = statement.executeQuery();
                 return createBalanceList(rs);
-            } catch (Exception e) {
-                throw new DAOException("wrong query", e);
+            } catch (SQLException e) {
+                throw new DAOException("Error fetching balance by ID", e);
+            }
+        }
+
+        public void updateById(int idSaldo, int money, boolean aggiungi) {
+            String query = "";
+            if (aggiungi) {
+                query = "UPDATE Saldi SET ammontare = ammontare + ? WHERE idSaldo = ?";
+            } else {
+                query = "UPDATE Saldi SET ammontare = ammontare - ? WHERE idSaldo = ?";
+            }
+
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+
+                statement.setInt(1, money);
+                statement.setInt(2, idSaldo);
+
+                int rowsUpdated = statement.executeUpdate();
+
+                if (rowsUpdated == 0) {
+
+                    throw new DAOException("No balance found with the given ID.");
+                }
+            } catch (SQLException e) {
+
+                throw new DAOException("Error updating balance", e);
             }
         }
 
@@ -86,7 +121,7 @@ public class Balance implements DataEntity {
                 statement.setInt(1, balance.getAmmontare());
                 statement.executeUpdate();
             } catch (SQLException e) {
-                throw new DAOException("Error creating user", e);
+                throw new DAOException("Error creating balance", e);
             }
         }
 

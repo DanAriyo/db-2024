@@ -7,21 +7,21 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="526.0" prefWidth="784.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="526.0" prefWidth="784.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="db_lab.view.ListView">
    <bottom>
       <HBox prefHeight="45.0" prefWidth="784.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" prefHeight="166.0" prefWidth="258.0" text="HOME">
+            <Button mnemonicParsing="false" onAction="#handleHomeButton" prefHeight="166.0" prefWidth="258.0" text="HOME">
                <font>
                   <Font name="System Bold" size="19.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="120.0" prefWidth="266.0" text="PROFILE">
+            <Button mnemonicParsing="false" onAction="#handleProfileButton" prefHeight="120.0" prefWidth="266.0" text="PROFILE">
                <font>
                   <Font name="System Bold" size="19.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="116.0" prefWidth="259.0" text="SELL">
+            <Button mnemonicParsing="false" onAction="#handleSellButton" prefHeight="116.0" prefWidth="259.0" text="SELL">
                <font>
                   <Font name="System Bold" size="19.0" />
                </font>
@@ -37,10 +37,6 @@
       </Label>
    </top>
    <center>
-      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label prefHeight="34.0" prefWidth="846.0" text="Label" />
-         </children>
-      </VBox>
+      <VBox fx:id="vBox" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>

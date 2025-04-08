@@ -80,34 +80,42 @@ public class Transaction implements DataEntity {
         private Connection connection;
 
         public TransactionDAO(Connection connection) {
+            if (connection == null) {
+                throw new DAOException("Connection is null.");
+            }
+
+            try {
+                if (connection.isClosed()) {
+                    throw new DAOException("Connection is closed.");
+                }
+            } catch (SQLException e) {
+                throw new DAOException("Error checking connection status.", e);
+            }
+
             this.connection = connection;
         }
 
         public List<Transaction> createTransactionList(ResultSet resultSet) throws SQLException {
-            List<Transaction> transactions = new ArrayList<>(); // La lista che conterrà i prodotti
+            List<Transaction> transactions = new ArrayList<>();
 
-            // Iteriamo su ogni riga del ResultSet
             while (resultSet.next()) {
-                // Recuperiamo i dati da ogni colonna del ResultSet
                 int idTransazione = resultSet.getInt("idTransazione");
                 int idVenditore = resultSet.getInt("idVenditore");
-                int idAcquirente = resultSet.getInt("idAcquirente"); // Supponiamo che "idCategoria" sia una colonna
+                int idAcquirente = resultSet.getInt("idAcquirente");
                 int speseSpedizione = resultSet.getInt("speseSpedizione");
                 int idRecensione = resultSet.getInt("IdRecensione");
                 int idArticolo = resultSet.getInt("IdArticolo");
                 int idSaldoVenditore = resultSet.getInt("idSaldoVenditore");
                 int commissioni = resultSet.getInt("Commissioni");
-                int idSaldoAcquirente = resultSet.getInt("Prezzo");
+                int idSaldoAcquirente = resultSet.getInt("idSaldoAcquirente");
 
                 Transaction transaction = new Transaction(idVenditore, idAcquirente, idTransazione, speseSpedizione,
                         commissioni, idSaldoVenditore, idRecensione, idArticolo,
                         idSaldoAcquirente);
 
-                // Aggiungiamo il product alla lista
                 transactions.add(transaction);
             }
 
-            // Restituiamo la lista di products
             return transactions;
         }
 
@@ -132,25 +140,38 @@ public class Transaction implements DataEntity {
             }
         }
 
+        public List<Transaction> filterbyIDUser(int id) throws DAOException {
+            String query = "SELECT * FROM Transazioni WHERE idAcquirente = ? OR IdVenditore = ?";
+            try (PreparedStatement statement = this.connection.prepareStatement(query)) {
+                statement.setInt(1, id);
+                statement.setInt(2, id);
+                ResultSet rs = statement.executeQuery();
+                return createTransactionList(rs);
+            } catch (Exception e) {
+                throw new DAOException("wrong query", e);
+            }
+        }
+
         public void create(Transaction transaction) throws DAOException {
 
-            String query = "INSERT INTO Transazioni (idVenditore,idAcquirente,speseSpedizione,commissioni,idSaldoVenditore,idRecensione,idArticolo,idSaldoAcquirente)"
-                    + "VALUES (?,?,?,?,?,?,?,?,?,?)";
+            String query = "INSERT INTO Transazioni (idVenditore, idAcquirente, speseSpedizione, commissioni, idSaldoVenditore, idRecensione, idArticolo, idSaldoAcquirente)"
+                    + "VALUES (?,?,?,?,?,?,?,?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
-                // Impostiamo i parametri per il PreparedStatement
                 statement.setInt(1, transaction.getIdVenditore());
                 statement.setInt(2, transaction.getIdAcquirente());
-                statement.setInt(3, transaction.getIdSaldoAcquirente());
-                statement.setInt(4, transaction.getSpeseSpedizione());
-                statement.setInt(5, transaction.getCommissioni());
-                statement.setInt(6, transaction.getIdSaldoVenditore());
+                statement.setInt(3, transaction.getSpeseSpedizione());
+                statement.setInt(4, transaction.getCommissioni());
+                statement.setInt(5, transaction.getIdSaldoVenditore());
+                if (transaction.getIdRecensione() == 0) {
+                    statement.setNull(6, java.sql.Types.INTEGER);
+                } else {
+                    statement.setInt(6, transaction.getIdRecensione());
+                }
                 statement.setInt(7, transaction.getIdArticolo());
-                // MANCA RECENSIONE
+                statement.setInt(8, transaction.getIdSaldoAcquirente());
 
-                // Eseguiamo l'operazione di aggiornamento
                 statement.executeUpdate();
             } catch (SQLException e) {
-                // Se si verifica un errore, lanciamo una DAOException
                 throw new DAOException("Error creating transaction", e);
             }
 

@@ -75,8 +75,8 @@ public class CreditReward implements DataEntity {
             }
         }
 
-        public List<CreditReward> filterByUserID(int idPremio) throws DAOException {
-            String query = "SELECT * FROM CreditoBonus WHERE idPremio = ?";
+        public List<CreditReward> filterByUserID(int id) throws DAOException {
+            String query = "SELECT * FROM CreditoBonus WHERE idUtente = ?";
             try (PreparedStatement statement = this.connection.prepareStatement(query)) {
                 statement.setInt(1, idUtente);
                 ResultSet rs = statement.executeQuery();

@@ -40,20 +40,17 @@ public class BankAccount implements DataEntity {
         }
 
         public List<BankAccount> createBankAccountList(ResultSet resultSet) throws SQLException {
-            List<BankAccount> bankAccounts = new ArrayList<>(); // La lista che conterrà i prodotti
+            List<BankAccount> bankAccounts = new ArrayList<>();
 
-            // Iteriamo su ogni riga del ResultSet
             while (resultSet.next()) {
-                // Recuperiamo i dati da ogni colonna del ResultSet
+
                 int iban = resultSet.getInt("iban");
-                int saldo = resultSet.getInt("SaldoContoCorrente");
+                int saldo = resultSet.getInt("SaldoConto");
 
                 BankAccount bankAccount = new BankAccount(iban, saldo);
-                // Aggiungiamo il product alla lista
                 bankAccounts.add(bankAccount);
             }
 
-            // Restituiamo la lista di products
             return bankAccounts;
         }
 
@@ -62,8 +59,8 @@ public class BankAccount implements DataEntity {
             try (PreparedStatement statement = this.connection.prepareStatement(query)) {
                 ResultSet rs = statement.executeQuery();
                 return createBankAccountList(rs);
-            } catch (Exception e) {
-                throw new DAOException("wrong query", e);
+            } catch (SQLException e) {
+                throw new DAOException("Error fetching all bank accounts", e);
             }
         }
 
@@ -73,18 +70,43 @@ public class BankAccount implements DataEntity {
                 statement.setInt(1, id);
                 ResultSet rs = statement.executeQuery();
                 return createBankAccountList(rs);
-            } catch (Exception e) {
-                throw new DAOException("wrong query", e);
+            } catch (SQLException e) {
+                throw new DAOException("Error fetching bank account by ID", e);
+            }
+        }
+
+        public void updateById(int iban, int money, boolean aggiungi) {
+            String query = "";
+            if (aggiungi) {
+                query = "UPDATE ContiCorrente SET SaldoConto = SaldoConto + ? WHERE iban = ?";
+            } else {
+                query = "UPDATE ContiCorrente SET SaldoConto = SaldoConto - ? WHERE iban = ?";
+            }
+
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+
+                statement.setInt(1, money);
+                statement.setInt(2, iban);
+
+                int rowsUpdated = statement.executeUpdate();
+
+                if (rowsUpdated == 0) {
+
+                    throw new DAOException("No account found with the given IBAN.");
+                }
+            } catch (SQLException e) {
+
+                throw new DAOException("Error updating bank account", e);
             }
         }
 
         public void create(BankAccount bankAccount) throws DAOException {
-            String query = "INSERT INTO Conti Corrente (SaldoContoCorrente) VALUES (?)";
+            String query = "INSERT INTO ContiCorrente (SaldoConto) VALUES (?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, bankAccount.getSaldo());
                 statement.executeUpdate();
             } catch (SQLException e) {
-                throw new DAOException("Error creating user", e);
+                throw new DAOException("Error creating user's bank account", e);
             }
         }
     }

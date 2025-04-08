@@ -12,8 +12,8 @@ import db_lab.data.DAOException;
 public class Product implements DataEntity {
 
     private String nomeArticolo;
-    private int idProprietario; // Assumiamo che idProprietario sia un oggetto User
-    private int idCategoria; // Assumiamo che idCategoria sia un oggetto Category
+    private int idProprietario;
+    private int idCategoria;
     private String materiale;
     private String taglia;
     private String condizioni;
@@ -93,16 +93,28 @@ public class Product implements DataEntity {
         private Connection connection;
 
         public ProductDAO(Connection connection) {
+            if (connection == null) {
+                throw new DAOException("Connection is null.");
+            }
+
+            try {
+                if (connection.isClosed()) {
+                    throw new DAOException("Connection is closed.");
+                }
+            } catch (SQLException e) {
+                throw new DAOException("Error checking connection status.", e);
+            }
+
             this.connection = connection;
         }
 
         public List<Product> getAll() throws DAOException {
-            String query = "SELECT * FROM Articoli";
+            String query = "SELECT * FROM Articoli WHERE stato = 'disponibile'";
             try (PreparedStatement statement = this.connection.prepareStatement(query)) {
                 ResultSet rs = statement.executeQuery();
                 return createProductList(rs);
-            } catch (Exception e) {
-                throw new DAOException("wrong query", e);
+            } catch (SQLException e) {
+                throw new DAOException("Error fetching all products", e);
             }
         }
 
@@ -112,22 +124,21 @@ public class Product implements DataEntity {
                 statement.setInt(1, idArticolo);
                 ResultSet rs = statement.executeQuery();
                 return createProductList(rs);
-            } catch (Exception e) {
-                throw new DAOException("wrong query", e);
+            } catch (SQLException e) {
+                throw new DAOException("Error fetching product by ID", e);
             }
         }
 
-        public void deletebyID(int idArticolo) throws DAOException {
-            String query = "DELETE FROM Articoli WHERE idArticolo = ?";
+        public void updatebyID(int idArticolo) throws DAOException {
+            String query = "UPDATE articoli SET stato = 'non_disponibile' WHERE idArticolo = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, idArticolo);
                 statement.executeUpdate();
             } catch (SQLException e) {
-                throw new DAOException("wrong query", e);
+                throw new DAOException("Error updating product by ID", e);
             }
         }
 
-        // DA GESTIRE IDSCONTO(RENDERE NULL ALL'INSERIMENTO DI UN NUOVO PRODOTTO)
         public void create(Product product) throws DAOException {
             String query = "INSERT INTO Articoli (nomeArticolo, idProprietario, idCategoria, Materiale, Taglia, Condizioni, Brand, Descrizione, idSconto, Prezzo) "
                     + "VALUES (?,?,?,?,?,?,?,?,?,?)";
@@ -141,7 +152,11 @@ public class Product implements DataEntity {
                 statement.setString(6, product.getCondizioni());
                 statement.setString(7, product.getBrand());
                 statement.setString(8, product.getDescrizione());
-                statement.setInt(9, product.getIdSconto());
+                if (product.getIdSconto() == 0) {
+                    statement.setNull(9, java.sql.Types.INTEGER);
+                } else {
+                    statement.setInt(9, product.getIdSconto());
+                }
                 statement.setDouble(10, product.getPrezzo());
 
                 statement.executeUpdate();
@@ -152,33 +167,43 @@ public class Product implements DataEntity {
         }
 
         public List<Product> createProductList(ResultSet resultSet) throws SQLException {
-            List<Product> products = new ArrayList<>(); // La lista che conterrà i prodotti
+            List<Product> products = new ArrayList<>();
 
-            // Iteriamo su ogni riga del ResultSet
             while (resultSet.next()) {
-                // Recuperiamo i dati da ogni colonna del ResultSet
                 String nomeArticolo = resultSet.getString("nomeArticolo");
-                int idProprietario = resultSet.getInt("idProprietario"); // Supponiamo che "idProprietario" sia una
+                int idProprietario = resultSet.getInt("idProprietario");
                 int idArticolo = resultSet.getInt("idArticolo");
-                int idCategoria = resultSet.getInt("idCategoria"); // Supponiamo che "idCategoria" sia una colonna
-                String materiale = resultSet.getString("Materiale"); // Supponiamo che "Materiale" sia una colonna
-                String taglia = resultSet.getString("Taglia"); // Supponiamo che "Taglia" sia una colonna
-                String condizioni = resultSet.getString("Condizioni"); // Supponiamo che "Condizioni" sia una colonna
-                String brand = resultSet.getString("Brand"); // Supponiamo che "Brand" sia una colonna
-                String descrizione = resultSet.getString("Descrizione"); // Supponiamo che "Descrizione" sia una colonna
+                int idCategoria = resultSet.getInt("idCategoria");
+                String materiale = resultSet.getString("Materiale");
+                String taglia = resultSet.getString("Taglia");
+                String condizioni = resultSet.getString("Condizioni");
+                String brand = resultSet.getString("Brand");
+                String descrizione = resultSet.getString("Descrizione");
                 int idSconto = resultSet.getInt("idSconto");
-                int prezzo = resultSet.getInt("Prezzo"); // Supponiamo che "Prezzo" sia una colonna
+                int prezzo = resultSet.getInt("Prezzo");
 
-                // Crea l'oggetto Product
                 Product product = new Product(idArticolo, nomeArticolo, idProprietario, idCategoria, materiale, taglia,
                         condizioni, brand, descrizione, idSconto, prezzo);
 
-                // Aggiungiamo il product alla lista
                 products.add(product);
             }
 
-            // Restituiamo la lista di products
             return products;
+        }
+
+        public void toggleProductStatus(Product product) throws DAOException {
+            String query = "UPDATE Articoli SET stato = CASE WHEN stato = 'disponibile' THEN 'non_disponibile' ELSE 'disponibile' END WHERE idArticolo = ?";
+
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, product.getId());
+
+                int affectedRows = statement.executeUpdate();
+                if (affectedRows == 0) {
+                    throw new DAOException("No product found with id: " + product.getId());
+                }
+            } catch (SQLException e) {
+                throw new DAOException("Error toggling product status", e);
+            }
         }
     }
 

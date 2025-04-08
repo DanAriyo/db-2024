@@ -7,11 +7,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="526.0" prefWidth="784.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="526.0" prefWidth="784.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="db_lab.view.ProfileView">
    <bottom>
       <HBox prefHeight="45.0" prefWidth="784.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" prefHeight="166.0" prefWidth="258.0" text="HOME">
+            <Button mnemonicParsing="false" onAction="#handleHomeButton" prefHeight="166.0" prefWidth="258.0" text="HOME">
                <font>
                   <Font name="System Bold" size="19.0" />
                </font></Button>
@@ -19,7 +19,7 @@
                <font>
                   <Font name="System Bold" size="19.0" />
                </font></Button>
-            <Button mnemonicParsing="false" prefHeight="116.0" prefWidth="259.0" text="SELL">
+            <Button mnemonicParsing="false" onAction="#handleSellButton" prefHeight="116.0" prefWidth="259.0" text="SELL">
                <font>
                   <Font name="System Bold" size="19.0" />
                </font></Button>
@@ -35,27 +35,27 @@
    <center>
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" prefHeight="78.0" prefWidth="790.0" text="SALDO">
+            <Button mnemonicParsing="false" onAction="#handleBalanceButton" prefHeight="78.0" prefWidth="790.0" text="SALDO">
                <font>
                   <Font name="System Bold" size="25.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="93.0" prefWidth="834.0" text="RICARICA SALDO">
+            <Button mnemonicParsing="false" onAction="#handleBankAccountButton" prefHeight="93.0" prefWidth="834.0" text="CONTO CORRENTE">
                <font>
                   <Font name="System Bold" size="25.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="98.0" prefWidth="890.0" text="PREMI">
+            <Button mnemonicParsing="false" onAction="#handleRewardButton" prefHeight="98.0" prefWidth="890.0" text="PREMI">
                <font>
                   <Font name="System Bold" size="25.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="90.0" prefWidth="807.0" text="RECENSIONI">
+            <Button mnemonicParsing="false" onAction="#handleReviewsButton" prefHeight="90.0" prefWidth="807.0" text="RECENSIONI">
                <font>
                   <Font name="System Bold" size="25.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="78.0" prefWidth="808.0" text="I MIEI ORDINI">
+            <Button mnemonicParsing="false" onAction="#handleTransactionsButton" prefHeight="78.0" prefWidth="808.0" text="I MIEI ORDINI">
                <font>
                   <Font name="System Bold" size="25.0" />
                </font>

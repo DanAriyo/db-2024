@@ -6,7 +6,6 @@ repositories {
     mavenCentral()
 }
 
-val javaFXVersion = "21" 
 
 val javaFXModules = listOf(
     "base",
@@ -19,16 +18,18 @@ val javaFXModules = listOf(
 val supportedPlatforms = listOf("linux", "mac", "win")
 
 dependencies {
-    implementation("mysql:mysql-connector-java:8.0.29")
-    testImplementation("org.assertj:assertj-core:3.25.3")
-    testImplementation(libs.junit)
 
+    val javaFxVersion = 15
     for (platform in supportedPlatforms) {
         for (module in javaFXModules) {
-            implementation("org.openjfx:javafx-$module:$javaFXVersion:$platform")
+            implementation("org.openjfx:javafx-$module:$javaFxVersion:$platform")
         }
     }
+
+    implementation("mysql:mysql-connector-java:8.0.29")
+    
 }
+
 
 java {
     toolchain {
@@ -37,5 +38,14 @@ java {
 }
 
 application {
-    mainClass = "db_lab.App"
+    mainClass.set("db_lab.Main")
+}
+
+tasks.named<Test>("test") {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
+}
+
+tasks.named<JavaExec>("run") {
+    classpath = sourceSets["main"].runtimeClasspath
 }
