@@ -226,6 +226,16 @@ public class User implements DataEntity {
             }
         }
 
+        public User getAdmin() throws DAOException {
+            String query = "SELECT * FROM Utenti WHERE stato = 'admin' ";
+            try (PreparedStatement statement = this.connection.prepareStatement(query)) {
+                ResultSet rs = statement.executeQuery();
+                return createUserList(rs).getFirst();
+            } catch (Exception e) {
+                throw new DAOException("wrong query", e);
+            }
+        }
+
     }
 
 }

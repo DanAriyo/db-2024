@@ -79,10 +79,10 @@ public class Review implements DataEntity {
             }
         }
 
-        public List<Review> filterByReviewer(int idUtente) throws DAOException {
+        public List<Review> filterByReviewer(int idRecensito) throws DAOException {
             String query = "SELECT * FROM Recensioni WHERE IdRecensito = ?";
             try (PreparedStatement statement = this.connection.prepareStatement(query)) {
-                statement.setInt(1, idRecensitore);
+                statement.setInt(1, idRecensito);
                 ResultSet rs = statement.executeQuery();
                 return createReviewList(rs);
             } catch (SQLException e) {
@@ -91,7 +91,7 @@ public class Review implements DataEntity {
         }
 
         public void deleteByID(int idRecensione) throws DAOException {
-            String query = "DELETE FROM Recensioni WHERE IdURecensione = ?";
+            String query = "DELETE FROM Recensioni WHERE IdRecensione = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, idRecensione);
                 statement.executeUpdate();
@@ -117,8 +117,8 @@ public class Review implements DataEntity {
             List<Review> reviews = new ArrayList<>();
             while (resultSet.next()) {
                 int idRecensione = resultSet.getInt("idRecensione");
-                int idRecensito = resultSet.getInt("IdURecensito");
-                int idRecensitore = resultSet.getInt("IdURecensitore");
+                int idRecensito = resultSet.getInt("IdRecensito");
+                int idRecensitore = resultSet.getInt("IdRecensitore");
                 int stelle = resultSet.getInt("Stelle");
                 String descrizione = resultSet.getString("Descrizione");
 

@@ -41,7 +41,7 @@ public final class ModelImpl implements Model {
     private User userHelper;
     private Deposit depositHelper;
     private DepositDAO depositDAO;
-    private User.UserDAO daoHelper;
+    private User.UserDAO UserDao;
     private BankAccount bankAccountHelper;
     private BankAccountDAO bankAccountDAO;
     private Balance balanceHelper;
@@ -63,12 +63,13 @@ public final class ModelImpl implements Model {
     private CreditRewardDAO creditRewardDAO;
     private SelfEvaluation selfEvaluationHelper;
     private SelfEvaluationDAO selfEvaluationDAO;
+    private int rewardCounter;
 
     public ModelImpl(Controller controller, Connection connection) throws SQLException {
         this.controller = controller;
         this.connection = connection;
         this.userHelper = new User();
-        this.daoHelper = this.userHelper.new UserDAO(this.connection);
+        this.UserDao = this.userHelper.new UserDAO(this.connection);
         this.bankAccountHelper = new BankAccount();
         this.balanceHelper = new Balance();
         this.users = new ArrayList<>();
@@ -92,6 +93,7 @@ public final class ModelImpl implements Model {
         this.creditRewardDAO = this.creditRewardHelper.new CreditRewardDAO(connection);
         this.selfEvaluationHelper = new SelfEvaluation();
         this.selfEvaluationDAO = this.selfEvaluationHelper.new SelfEvaluationDAO(connection);
+        this.rewardCounter = 0;
     }
 
     @Override
@@ -120,9 +122,9 @@ public final class ModelImpl implements Model {
             user.setIdSaldo(idSaldo);
 
             // Creazione dell'utente
-            this.daoHelper.create(user);
+            this.UserDao.create(user);
 
-            List<User> users = this.daoHelper.getAll();
+            List<User> users = this.UserDao.getAll();
             if (users.isEmpty()) {
                 throw new SQLException("Errore nella creazione dell'utente: nessuna riga creata.");
             }
@@ -142,7 +144,7 @@ public final class ModelImpl implements Model {
 
     @Override
     public List<User> getUsers() {
-        var users = this.daoHelper.getAll();
+        var users = this.UserDao.getAll();
         return users;
     }
 
@@ -190,7 +192,7 @@ public final class ModelImpl implements Model {
 
     @Override
     public User getUser(String password, String username) {
-        var users = this.daoHelper.getAll();
+        var users = this.UserDao.getAll();
         for (User user : users) {
             if (user.getPassword().equals(password) && user.getUsername().equals(username)) {
                 return user;
@@ -202,7 +204,7 @@ public final class ModelImpl implements Model {
 
     @Override
     public User getUserById(int id) {
-        return this.daoHelper.filterbyID(id).getFirst();
+        return this.UserDao.filterbyID(id).getFirst();
     }
 
     @Override
@@ -242,7 +244,7 @@ public final class ModelImpl implements Model {
 
     @Override
     public void toggleUserStatus(User user) {
-        this.daoHelper.toggleUserStatus(user);
+        this.UserDao.toggleUserStatus(user);
     }
 
     @Override
@@ -254,6 +256,37 @@ public final class ModelImpl implements Model {
     @Override
     public void rechargeBankAccount(User user) {
         this.bankAccountDAO.updateById(user.getIban(), 100, true);
+    }
+
+    @Override
+    public void checkRewards(Transaction transaction) {
+
+        List<Transaction> transactions = this.transactionDAO.filterbySellerIdUser(transaction.getIdVenditore());
+
+        if (transactions.size() >= 3 && transactions.size() % 3 == 0) {
+            var listCreditReward = this.creditRewardDAO.getAll();
+            var listSelfEvaluation = this.selfEvaluationDAO.getAll();
+            if (listCreditReward.size() >= listSelfEvaluation.size()) {
+                var fictionalCreditReward = new CreditReward(0, "Premio Ottenuto: Importo Bonus", 10,
+                        transaction.getIdVenditore());
+                this.creditRewardDAO.create(fictionalCreditReward, this.balanceDAO,
+                        this.UserDao.filterbyID(fictionalCreditReward.getIdUtente()).getFirst());
+            } else {
+                var fictionalSelfEvaluationReward = new SelfEvaluation(0, "Premio Ottenuto: Recensione automatica", 5,
+                        transaction.getIdVenditore());
+                this.selfEvaluationDAO.create(fictionalSelfEvaluationReward, this.reviewDAO, this.UserDao.getAdmin());
+            }
+        }
+    }
+
+    @Override
+    public void newReview(Review review) {
+        this.reviewDAO.create(review);
+    }
+
+    @Override
+    public Review getLatestReview() {
+        return this.reviewDAO.getAll().getLast();
     }
 
 }

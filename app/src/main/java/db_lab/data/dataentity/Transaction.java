@@ -152,6 +152,17 @@ public class Transaction implements DataEntity {
             }
         }
 
+        public List<Transaction> filterbySellerIdUser(int id) throws DAOException {
+            String query = "SELECT * FROM Transazioni WHERE IdVenditore = ?";
+            try (PreparedStatement statement = this.connection.prepareStatement(query)) {
+                statement.setInt(1, id);
+                ResultSet rs = statement.executeQuery();
+                return createTransactionList(rs);
+            } catch (Exception e) {
+                throw new DAOException("wrong query", e);
+            }
+        }
+
         public void create(Transaction transaction) throws DAOException {
 
             String query = "INSERT INTO Transazioni (idVenditore, idAcquirente, speseSpedizione, commissioni, idSaldoVenditore, idRecensione, idArticolo, idSaldoAcquirente)"

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import db_lab.data.DAOException;
+import db_lab.data.dataentity.Balance.BalanceDAO;
 
 public class CreditReward implements DataEntity {
 
@@ -75,7 +76,7 @@ public class CreditReward implements DataEntity {
             }
         }
 
-        public List<CreditReward> filterByUserID(int id) throws DAOException {
+        public List<CreditReward> filterByUserID(int idUtente) throws DAOException {
             String query = "SELECT * FROM CreditoBonus WHERE idUtente = ?";
             try (PreparedStatement statement = this.connection.prepareStatement(query)) {
                 statement.setInt(1, idUtente);
@@ -86,13 +87,15 @@ public class CreditReward implements DataEntity {
             }
         }
 
-        public void create(CreditReward reward) throws DAOException {
+        public void create(CreditReward reward, BalanceDAO balanceDAOHelper, User user)
+                throws DAOException {
             String query = "INSERT INTO CreditoBonus (descrizione, importoBonus, idUtente) VALUES (?, ?, ?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, reward.getDescrizione());
                 statement.setInt(2, reward.getImportoBonus());
                 statement.setInt(3, reward.getIdUtente());
                 statement.executeUpdate();
+                balanceDAOHelper.updateById(user.getIdSaldo(), reward.importoBonus, true);
             } catch (SQLException e) {
                 throw new DAOException("Errore nella creazione del premio", e);
             }

@@ -47,6 +47,7 @@ public class ControllerImpl implements Controller {
     @Override
     public void newTransaction(Transaction fictionalTransaction) {
         this.model.newTransaction(fictionalTransaction);
+        this.model.checkRewards(fictionalTransaction);
     }
 
     @Override
@@ -122,6 +123,21 @@ public class ControllerImpl implements Controller {
     @Override
     public void rechargeBankAccount(User user) {
         this.model.rechargeBankAccount(user);
+    }
+
+    @Override
+    public void checkRewards(Transaction transaction) {
+        this.model.checkRewards(transaction);
+    }
+
+    @Override
+    public void newReview(Review review) {
+        this.model.newReview(review);
+    }
+
+    @Override
+    public Review getLatestReview() {
+        return this.model.getLatestReview();
     }
 
 }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import db_lab.data.DAOException;
+import db_lab.data.dataentity.Review.ReviewDAO;
 
 public class SelfEvaluation implements DataEntity {
 
@@ -73,7 +74,7 @@ public class SelfEvaluation implements DataEntity {
             }
         }
 
-        public List<SelfEvaluation> filterByUserID(int id) throws DAOException {
+        public List<SelfEvaluation> filterByUserID(int idUtente) throws DAOException {
             String query = "SELECT * FROM autovalutazione WHERE idUtente = ?";
             try (PreparedStatement statement = this.connection.prepareStatement(query)) {
                 statement.setInt(1, idUtente);
@@ -84,16 +85,23 @@ public class SelfEvaluation implements DataEntity {
             }
         }
 
-        public void create(SelfEvaluation evaluation) throws DAOException {
+        public void create(SelfEvaluation evaluation, ReviewDAO reviewDAO, User admin) throws DAOException {
             String query = "INSERT INTO autovalutazione (descrizione, stelle, idUtente) VALUES (?, ?, ?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, evaluation.getDescrizione());
                 statement.setInt(2, evaluation.getStelle());
                 statement.setInt(3, evaluation.getIdUtente());
                 statement.executeUpdate();
+                reviewDAO.create(createFictionalReview(admin, evaluation.idUtente));
             } catch (SQLException e) {
                 throw new DAOException("Error creating evaluation", e);
             }
+        }
+
+        public Review createFictionalReview(User admin, int idUtente) {
+            Review review = new Review(0, admin.getId(), idUtente,
+                    5, "Recensione Automatica");
+            return review;
         }
     }
 }

@@ -45,8 +45,15 @@ public class ListView implements View {
         vBox.setAlignment(Pos.CENTER);
 
         for (Review review : reviews) {
-            Label label = new Label(review.getDescrizione() + " " + review.getStelle() + "STELLE");
-            label.setStyle("-fx-font-weight: bold; -fx-font-size: 19px;");
+            Label label = new Label(review.getDescrizione() + " " + review.getStelle() + " STELLE");
+            label.setStyle("-fx-font-weight: bold; " +
+                    "-fx-font-size: 19px; " +
+                    "-fx-border-color: black; " +
+                    "-fx-border-width: 2px; " +
+                    "-fx-border-radius: 5px; " +
+                    "-fx-padding: 10px; " +
+                    "-fx-background-color: #f5f5f5;");
+            VBox.setMargin(label, new Insets(5, 0, 5, 0));
             vBox.getChildren().add(label);
         }
 
@@ -184,7 +191,7 @@ public class ListView implements View {
         vBox.setAlignment(Pos.CENTER);
 
         for (CreditReward reward : creditRewards) {
-            Label label = new Label(reward.getDescrizione() + " " + reward.getImportoBonus() + "SOLDI BONUS");
+            Label label = new Label(reward.getDescrizione() + " " + reward.getImportoBonus() + " €");
             label.setStyle("-fx-font-weight: bold; " +
                     "-fx-font-size: 19px; " +
                     "-fx-border-color: black; " +

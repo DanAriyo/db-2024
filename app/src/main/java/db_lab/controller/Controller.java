@@ -53,4 +53,10 @@ public interface Controller {
 
     public void rechargeBankAccount(User user);
 
+    public void checkRewards(Transaction transaction);
+
+    public void newReview(Review review);
+
+    public Review getLatestReview();
+
 }
