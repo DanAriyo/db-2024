@@ -26,6 +26,7 @@ public class SellView implements View {
     private User currentUser;
     private Controller controller;
 
+    // Campi input per i dati del prodotto
     @FXML
     private TextField nomeArticolo;
 
@@ -56,9 +57,11 @@ public class SellView implements View {
     @FXML
     private Button sellButton;
 
+    // Mappa per associare le categorie agli ID
     private Map<String, Integer> category;
     private Map<Integer, String> categoryImages;
 
+    // Crea un oggetto Product fittizio dai dati inseriti
     public Product createFictionalProduct() {
         String nomeArticoloText = nomeArticolo.getText();
         String materialeText = materiale.getText();
@@ -72,33 +75,41 @@ public class SellView implements View {
         int idCategoria = this.category.get(categoryJpeg);
         return new Product(0, nomeArticoloText, this.currentUser.getId(), idCategoria, materialeText, tagliaText,
                 condizioniText, brandText, descrizioneText, 0, prezzoInt);
-
     }
 
+    // Inizializza la view con controller e utente corrente
     public void setParameter(Controller controller, User user) {
         this.currentUser = user;
         this.controller = controller;
+
+        // Aggiunge le taglie e categorie alle ChoiceBox
         taglia.getItems().addAll("S", "M", "L", "XL");
         categoria.getItems().addAll("maglietta", "accessori", "scarpe", "pantaloni");
+
+        // Mappa di associazione categoria -> ID
         this.category = new HashMap<>();
         category.put("maglietta.jpeg", 1);
         category.put("accessori.jpeg", 2);
         category.put("pantaloni.jpeg", 3);
         category.put("scarpe.jpeg", 4);
 
+        // Mappa inversa per recuperare nome immagine da ID categoria
         this.categoryImages = new HashMap<>();
         categoryImages.put(1, "maglietta.jpeg");
         categoryImages.put(2, "accessori.jpeg");
         categoryImages.put(3, "pantaloni.jpeg");
         categoryImages.put(4, "scarpe.jpeg");
 
+        // Listener per aggiornare immagine al cambio di categoria
         categoria.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             updateImagePreview(newVal);
         });
-        this.sellButton.setDisable(false);
 
+        // Abilita il pulsante di vendita
+        this.sellButton.setDisable(false);
     }
 
+    // Aggiorna l'immagine di anteprima in base alla categoria selezionata
     private void updateImagePreview(String categoriaText) {
         categoriaText = categoriaText + ".jpeg";
         int idCategoria = category.getOrDefault(categoriaText, -1);
@@ -118,13 +129,14 @@ public class SellView implements View {
         return this.controller;
     }
 
+    // Gestisce il click sul pulsante di vendita, aggiunge il prodotto
     @FXML
     public void handleSellProductButton() {
         getController().addProduct(createFictionalProduct());
         this.sellButton.setDisable(true);
-
     }
 
+    // Gestisce il click sul pulsante "Home", naviga alla schermata HomeView
     @FXML
     public void handleHomeButton(final ActionEvent event) {
         try {
@@ -134,7 +146,7 @@ public class SellView implements View {
             HomeView controller = loader.getController();
             controller.setParameter(getController(), currentUser);
 
-            // Ottieni la finestra attuale e imposta la nuova scena
+            // Imposta la nuova scena nella finestra corrente
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
             stage.setScene(scene);
@@ -144,17 +156,18 @@ public class SellView implements View {
         }
     }
 
+    // Gestisce il click sul pulsante "Profilo", naviga alla schermata ProfileView
     @FXML
     public void handleProfileButton(final ActionEvent event) {
         try {
-            // Carica il file FXML
+            // Carica il layout FXML per la vista del profilo
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/ProfileView.fxml"));
             Parent root = loader.load();
 
             ProfileView controller = loader.getController();
             controller.setParameters(this.controller, this.currentUser);
 
-            // Ottieni la finestra attuale e imposta la nuova scena
+            // Imposta la nuova scena nella finestra corrente
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
             stage.setScene(scene);

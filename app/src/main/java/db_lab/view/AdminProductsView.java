@@ -29,10 +29,10 @@ import javafx.stage.Stage;
 public class AdminProductsView implements View {
 
     private Controller controller;
-    private User currentUser;
+    private User currentUser; // Utente amministratore corrente
 
     @FXML
-    GridPane gridPane;
+    GridPane gridPane; // Griglia in cui inserire i prodotti
 
     @FXML
     Button usersButton;
@@ -41,41 +41,55 @@ public class AdminProductsView implements View {
     Button productsButton;
 
     @FXML
-    ScrollPane scrollPane;
+    ScrollPane scrollPane; // ScrollPane contenente la griglia per lo scrolling
 
     @Override
     public Controller getController() {
         return this.controller;
     }
 
+    /**
+     * Inizializza la view con il controller e l'utente corrente,
+     * e popola la GridPane con la lista dei prodotti ottenuti dal controller.
+     */
     public void setParameter(Controller controller, User user) {
         this.currentUser = user;
         this.controller = controller;
         this.populateGridPane(this.gridPane, this.controller.getProducts());
     }
 
+    /**
+     * Popola la GridPane con prodotti rappresentati da VBox contenenti immagine,
+     * nome, prezzo e un pulsante di azione.
+     * 
+     * @param gridPane griglia da popolare
+     * @param products lista di prodotti da mostrare
+     */
     public void populateGridPane(GridPane gridPane, List<Product> products) {
-        gridPane.getChildren().clear();
+        gridPane.getChildren().clear(); // Pulisce la griglia
 
-        int columns = 2;
+        int columns = 2; // Numero colonne nella griglia
         int row = 0;
         int col = 0;
 
+        // Dimensioni e spaziatura dei VBox (contenitori prodotti)
         double vBoxWidth = 160;
         double vBoxHeight = 250;
         double spacing = 10;
 
+        // Imposta spaziatura verticale e orizzontale della griglia
         gridPane.setVgap(spacing);
         gridPane.setHgap(spacing);
 
+        // Mappa id categoria -> nome immagine
         Map<Integer, String> categoryImages = new HashMap<>();
         categoryImages.put(1, "maglietta.jpeg");
         categoryImages.put(2, "accessori.jpeg");
         categoryImages.put(3, "pantaloni.jpeg");
         categoryImages.put(4, "scarpe.jpeg");
 
+        // Per ogni prodotto crea un VBox con immagine, nome, prezzo e pulsante
         for (Product product : products) {
-            // Creazione del VBox con dimensioni fisse
             VBox vbox = new VBox();
             vbox.setPrefWidth(vBoxWidth);
             vbox.setPrefHeight(vBoxHeight);
@@ -83,13 +97,14 @@ public class AdminProductsView implements View {
             vbox.setAlignment(Pos.CENTER);
             vbox.setStyle("-fx-border-color: lightgray; -fx-border-width: 1px; -fx-padding: 10px;");
 
-            // Creazione dell'ImageView
+            // ImageView per l'immagine del prodotto
             ImageView imageView = new ImageView();
             imageView.setFitWidth(120);
             imageView.setFitHeight(120);
             imageView.setPreserveRatio(true);
             imageView.setSmooth(true);
 
+            // Ottiene immagine associata alla categoria del prodotto
             String imageName = categoryImages.getOrDefault(product.getIdCategoria(), "default.jpeg");
             String imagePath = "/images/" + imageName;
 
@@ -105,13 +120,14 @@ public class AdminProductsView implements View {
             imageContainer.setPrefSize(140, 140);
             imageContainer.setAlignment(Pos.CENTER);
 
-            // Creazione delle Label
+            // Label per il nome prodotto
             Label nameLabel = new Label(product.getNome());
             nameLabel.setPrefWidth(140);
             nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-alignment: center;");
             nameLabel.setWrapText(true);
             nameLabel.setTextAlignment(TextAlignment.CENTER);
 
+            // Label per il prezzo prodotto
             Label priceLabel = new Label(String.format("€ %.2f", product.getPrezzo()));
             priceLabel.setPrefWidth(140);
             priceLabel.setAlignment(Pos.CENTER);
@@ -119,12 +135,13 @@ public class AdminProductsView implements View {
             priceLabel.setWrapText(true);
             priceLabel.setTextAlignment(TextAlignment.CENTER);
 
-            // Pulsante Acquista
+            // Pulsante azione ("AZIONE") per aprire i dettagli del prodotto
             Button actionButton = new Button("AZIONE");
             actionButton.setPrefWidth(140);
             actionButton.setStyle(
                     "-fx-font-weight: bold; -fx-font-size: 12px; -fx-background-color: #27ae60; -fx-text-fill: white;");
 
+            // Evento click del pulsante: apre la finestra di dettaglio prodotto
             actionButton.setOnAction(event -> {
                 try {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/AdminProductDetailsView.fxml"));
@@ -142,19 +159,20 @@ public class AdminProductsView implements View {
                 }
             });
 
-            // Aggiunta degli elementi al VBox
+            // Aggiunge immagine, nome, prezzo e pulsante al VBox
             vbox.getChildren().addAll(imageContainer, nameLabel, priceLabel, actionButton);
 
-            // Aggiunta del VBox alla griglia
+            // Inserisce il VBox nella griglia
             gridPane.add(vbox, col, row);
 
-            col = (col + 1) % columns;
+            col = (col + 1) % columns; // Avanza colonna
             if (col == 0) {
-                row++;
+                row++; // Nuova riga
             }
         }
 
-        // **Calcola dinamicamente l'altezza della GridPane**
+        // Calcola e imposta dinamicamente l'altezza della GridPane in base al numero di
+        // righe
         int totalRows = (int) Math.ceil((double) products.size() / columns);
         double gridHeight = totalRows * (vBoxHeight + spacing);
 
@@ -162,22 +180,24 @@ public class AdminProductsView implements View {
         gridPane.setPrefHeight(gridHeight);
         gridPane.setMaxHeight(gridHeight);
 
-        // **Forza lo ScrollPane a gestire lo scrolling**
+        // Configura lo ScrollPane per adattarsi alla larghezza, ma non all'altezza
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(false);
     }
 
+    /**
+     * Gestisce il click sul pulsante "Users" per passare alla vista amministrativa
+     * degli utenti.
+     */
     @FXML
     public void handleUsersButton(final ActionEvent event) {
         try {
-            // Carica il file FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/layouts/AdminUsersView.fxml"));
             Parent root = loader.load();
 
             AdminUsersView controller = loader.getController();
             controller.setParameter(getController(), currentUser);
 
-            // Ottieni la finestra attuale e imposta la nuova scena
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
             stage.setScene(scene);
