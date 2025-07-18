@@ -266,7 +266,7 @@ public final class ModelImpl implements Model {
         if (transactions.size() >= 3 && transactions.size() % 3 == 0) {
             var listCreditReward = this.creditRewardDAO.getAll();
             var listSelfEvaluation = this.selfEvaluationDAO.getAll();
-            if (listCreditReward.size() >= listSelfEvaluation.size()) {
+            if (listCreditReward.size() <= listSelfEvaluation.size()) {
                 var fictionalCreditReward = new CreditReward(0, "Premio Ottenuto: Importo Bonus", 10,
                         transaction.getIdVenditore());
                 this.creditRewardDAO.create(fictionalCreditReward, this.balanceDAO,

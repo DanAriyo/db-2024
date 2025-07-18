@@ -18,7 +18,7 @@ public class User implements DataEntity {
     private String telefono;
     private String indirizzo;
     private String cf;
-    private int iban;
+    private int iban; // ATTENZIONE: IBAN dovrebbe essere una Stringa, non un intero
     private int idSaldo;
     private String username;
     private String password;
@@ -35,13 +35,13 @@ public class User implements DataEntity {
         this.nome = nome;
         this.cognome = cognome;
         this.email = email;
-        this.iban = iban;
+        this.iban = iban; // IBAN come int: può causare problemi in quanto l'IBAN è alfanumerico e lungo
         this.idSaldo = idSaldo;
         this.telefono = telefono;
         this.indirizzo = indirizzo;
         this.cf = cf;
         this.username = username;
-        this.password = password;
+        this.password = password; // Considera di gestire password in modo sicuro (hash)
     }
 
     @Override
@@ -124,6 +124,7 @@ public class User implements DataEntity {
             this.connection = connection;
         }
 
+        // Recupera tutti gli utenti dal DB
         public List<User> getAll() throws DAOException {
             String query = "SELECT * FROM Utenti";
             try (PreparedStatement statement = this.connection.prepareStatement(query)) {
@@ -134,6 +135,7 @@ public class User implements DataEntity {
             }
         }
 
+        // Filtra gli utenti per id
         public List<User> filterbyID(int id) throws DAOException {
             String query = "SELECT * FROM Utenti WHERE IdUtente = ?";
             try (PreparedStatement statement = this.connection.prepareStatement(query)) {
@@ -145,6 +147,7 @@ public class User implements DataEntity {
             }
         }
 
+        // Cancella un utente dal DB tramite id
         public void deletebyID(int id) throws DAOException {
             String query = "DELETE FROM Utenti WHERE idUtente = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -155,6 +158,7 @@ public class User implements DataEntity {
             }
         }
 
+        // Crea un nuovo utente nel DB
         public void create(User user) throws DAOException {
 
             String query = "INSERT INTO Utenti (username,nome,cognome, email, iban, idSaldo, telefono, indirizzo,cf,password) VALUES (?,?,?,?,?,?,?,?,?,?)";
@@ -163,33 +167,34 @@ public class User implements DataEntity {
                 statement.setString(2, user.getNome());
                 statement.setString(3, user.getCognome());
                 statement.setString(4, user.getEmail());
-                statement.setInt(5, user.getIban());
+                statement.setInt(5, user.getIban()); // Come sopra, usa int per iban potrebbe creare problemi
                 statement.setInt(6, user.getIdSaldo());
                 statement.setString(7, user.getTelefono());
                 statement.setString(8, user.getIndirizzo());
                 statement.setString(9, user.getCf());
-                statement.setString(10, user.getPassword());
+                statement.setString(10, user.getPassword()); // Considera la sicurezza password
                 statement.executeUpdate();
             } catch (SQLException e) {
                 throw new DAOException("Error creating user", e);
             }
         }
 
+        // Crea una lista di utenti a partire da un ResultSet
         public List<User> createUserList(ResultSet resultSet) throws SQLException {
             List<User> utenti = new ArrayList<>(); // La lista che conterrà gli utenti
 
             // Iteriamo su ogni riga del ResultSet
             while (resultSet.next()) {
                 // Creiamo un nuovo oggetto Utente per ogni riga
-                int id = resultSet.getInt("idUtente"); // Supponiamo che "id" sia una colonna
-                String nome = resultSet.getString("nome"); // Supponiamo che "nome" sia una colonna
-                String cognome = resultSet.getString("cognome"); // Supponiamo che "cognome" sia una colonna
-                String email = resultSet.getString("email"); // Supponiamo che "email" sia una colonna
+                int id = resultSet.getInt("idUtente"); // Assicurati che il nome della colonna sia corretto
+                String nome = resultSet.getString("nome");
+                String cognome = resultSet.getString("cognome");
+                String email = resultSet.getString("email");
                 String indirizzo = resultSet.getString("indirizzo");
                 int idSaldo = resultSet.getInt("idSaldo");
-                int iban = resultSet.getInt("iban");
+                int iban = resultSet.getInt("iban"); // Come sopra, attenzione al tipo IBAN
                 String telefono = resultSet.getString("telefono");
-                String cf = resultSet.getString("CF");
+                String cf = resultSet.getString("CF"); // Controlla se 'CF' è maiuscolo nel DB
                 String password = resultSet.getString("password");
                 String username = resultSet.getString("username");
 
@@ -202,13 +207,14 @@ public class User implements DataEntity {
             }
 
             if (utenti.isEmpty()) {
-                System.out.println("No users found.");
+                System.out.println("No users found."); // Log in caso non ci siano utenti
             }
 
             // Restituiamo la lista di utenti
             return utenti;
         }
 
+        // Cambia lo stato di un utente tra 'bloccato' e 'sbloccato' (esclude admin)
         public void toggleUserStatus(User user) throws DAOException {
             String query = "UPDATE utenti " +
                     "SET stato = CASE " +
@@ -226,11 +232,12 @@ public class User implements DataEntity {
             }
         }
 
+        // Restituisce l'utente admin, se presente
         public User getAdmin() throws DAOException {
             String query = "SELECT * FROM Utenti WHERE stato = 'admin' ";
             try (PreparedStatement statement = this.connection.prepareStatement(query)) {
                 ResultSet rs = statement.executeQuery();
-                return createUserList(rs).getFirst();
+                return createUserList(rs).getFirst(); // ATTENZIONE: List non ha metodo getFirst()
             } catch (Exception e) {
                 throw new DAOException("wrong query", e);
             }

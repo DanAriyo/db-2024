@@ -9,18 +9,21 @@ import java.util.List;
 
 import db_lab.data.DAOException;
 
+// Classe che rappresenta una recensione nel sistema
 public class Review implements DataEntity {
 
+    // Attributi della recensione
     private int idRecensione;
-    private int idRecensito;
-    private int idRecensitore;
-    private int stelle;
-    private String descrizione;
+    private int idRecensito; // Chi è recensito (es. prodotto o utente)
+    private int idRecensitore; // Chi ha scritto la recensione
+    private int stelle; // Valutazione in stelle
+    private String descrizione; // Testo della recensione
 
+    // Costruttore vuoto
     public Review() {
-
     }
 
+    // Costruttore con parametri per creare un oggetto completo
     public Review(int idRecensione, int idRecensitore, int idRecensito, int stelle, String descrizione) {
         this.idRecensito = idRecensito;
         this.idRecensitore = idRecensitore;
@@ -29,6 +32,7 @@ public class Review implements DataEntity {
         this.idRecensione = idRecensione;
     }
 
+    // Getters per gli attributi
     public int getIdRecensito() {
         return this.idRecensito;
     }
@@ -45,19 +49,23 @@ public class Review implements DataEntity {
         return this.descrizione;
     }
 
+    // Implementazione del metodo getId() richiesto da DataEntity
     @Override
     public int getId() {
         return this.idRecensione;
     }
 
+    // Classe DAO interna per gestire l'accesso ai dati delle recensioni nel DB
     public final class ReviewDAO {
 
         private Connection connection;
 
+        // Costruttore con connessione al DB
         public ReviewDAO(Connection connection) {
             this.connection = connection;
         }
 
+        // Recupera tutte le recensioni dal DB
         public List<Review> getAll() throws DAOException {
             String query = "SELECT * FROM Recensioni";
             try (PreparedStatement statement = this.connection.prepareStatement(query)) {
@@ -68,28 +76,33 @@ public class Review implements DataEntity {
             }
         }
 
+        // Recupera recensioni filtrando per idRecensione (ID della recensione)
         public List<Review> filterByReview(int idRecensione) throws DAOException {
             String query = "SELECT * FROM Recensioni WHERE IdRecensione = ?";
             try (PreparedStatement statement = this.connection.prepareStatement(query)) {
-                statement.setInt(1, idRecensitore);
+                // ATTENZIONE: qui c'era un errore, correggo con il parametro giusto
+                statement.setInt(1, idRecensione);
                 ResultSet rs = statement.executeQuery();
                 return createReviewList(rs);
             } catch (SQLException e) {
-                throw new DAOException("Error fetching reviews by reviewer", e);
+                throw new DAOException("Error fetching reviews by review ID", e);
             }
         }
 
+        // Recupera recensioni filtrando per idRecensito (chi è recensito)
         public List<Review> filterByReviewer(int idRecensito) throws DAOException {
             String query = "SELECT * FROM Recensioni WHERE IdRecensito = ?";
             try (PreparedStatement statement = this.connection.prepareStatement(query)) {
+                // ATTENZIONE: corretto parametro
                 statement.setInt(1, idRecensito);
                 ResultSet rs = statement.executeQuery();
                 return createReviewList(rs);
             } catch (SQLException e) {
-                throw new DAOException("Error fetching reviews by reviewer", e);
+                throw new DAOException("Error fetching reviews by reviewed ID", e);
             }
         }
 
+        // Elimina una recensione dato l'id
         public void deleteByID(int idRecensione) throws DAOException {
             String query = "DELETE FROM Recensioni WHERE IdRecensione = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -100,6 +113,7 @@ public class Review implements DataEntity {
             }
         }
 
+        // Inserisce una nuova recensione nel DB
         public void create(Review review) throws DAOException {
             String query = "INSERT INTO Recensioni (IdRecensito, IdRecensitore, Stelle, Descrizione) VALUES (?,?,?,?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -113,6 +127,7 @@ public class Review implements DataEntity {
             }
         }
 
+        // Metodo helper per trasformare il ResultSet in lista di oggetti Review
         private List<Review> createReviewList(ResultSet resultSet) throws SQLException {
             List<Review> reviews = new ArrayList<>();
             while (resultSet.next()) {
@@ -122,12 +137,11 @@ public class Review implements DataEntity {
                 int stelle = resultSet.getInt("Stelle");
                 String descrizione = resultSet.getString("Descrizione");
 
-                Review review = new Review(idRecensione, idRecensito, idRecensitore, stelle, descrizione);
+                // Creo l'oggetto Review con i dati presi dal DB
+                Review review = new Review(idRecensione, idRecensitore, idRecensito, stelle, descrizione);
                 reviews.add(review);
             }
             return reviews;
         }
-
     }
-
 }

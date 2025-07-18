@@ -205,7 +205,7 @@ public class ListView implements View {
         }
 
         for (SelfEvaluation reward : selfEvaluations) {
-            Label label = new Label(reward.getDescrizione() + " " + reward.getStelle() + "STELLE");
+            Label label = new Label(reward.getDescrizione() + " " + reward.getStelle() + " STELLE");
             label.setStyle("-fx-font-weight: bold; " +
                     "-fx-font-size: 19px; " +
                     "-fx-border-color: black; " +
